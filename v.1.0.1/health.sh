@@ -1,6 +1,6 @@
 #
 # Script By Anton Zheltyshev
-# Version 1.0
+# Version 1.0.1
 # Contacts info@maxrival.com
 #
 # Github Storj Project - https://github.com/Storj/storjshare-daemon
