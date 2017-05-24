@@ -52,52 +52,54 @@ then
 	LT=$(echo $CURL | awk -F ',' {'print $7'} | tr -d '"' | tr -d '{lastTimeout:')
 	TR=$(echo $CURL | awk -F ',' {'print $8'} | tr -d '"' | tr -d '{timeoutRate:')
 	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
-	DELTA=$(grep -R 'delta' $LOGS_FOLDER/$line.log | tail -1 | awk -F ',' {'print $3'} | tr -d 'delta: ms"')
-
+	DELTA=$(grep -R 'delta' $LOGS_FOLDER/$line.log | tail -1 | awk -F ',' {'print $3'} | awk -F ' ' {'print $2'})
 
 	if [ $TR == 0 ]
 	then
-	    TR_STATUS=$(echo -e '\e[0;32mgood\e[0m')
+	    TR_STATUS=$(echo -e "\e[0;32mgood\e[0m")
 	else
-	    TR_STATUS=$(echo -e '\e[0;31mbad /' $ERR3 '\e[0m')
+	    TR_STATUS=$(echo -e "\e[0;31mbad /" $ERR3 "\e[0m")
 	fi
 
-	if [[ $PORT_STATUS == 'open' ]]
+	if [[ $PORT_STATUS == "open" ]]
 	then
-	    PORT_STATUS=$(echo -e '\e[0;32mopen\e[0m')
-	elif [[ $PORT_STATUS == 'closed' ]]
+	    PORT_STATUS=$(echo -e "\e[0;32mopen\e[0m")
+	elif [[ $PORT_STATUS == "closed" ]]
 	then
-	    PORT_STATUS=$(echo -e '\e[0;31mclose /' $ERR4 '\e[0m')
+	    PORT_STATUS=$(echo -e "\e[0;31mclose /" $ERR4 "\e[0m")
 	else
-	    PORT_STATUS=$(echo -e '\e[0;33mapi / Server not available \e[0m')
+	    PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
 	fi
 
-	if [ $DELTA -le -500 ] || [ $DELTA -ge 500 ];
-        then
-	    DELTASTATUS=$(echo -e '/ \e[0;31m'$ERR1'\e[0m')
+	if [ $DELTA -ge "500" ] || [ $DELTA -le "-500" ]
+	then
+	    DELTASTATUS=$(echo -e "/ \e[0;31mbad / "$ERR1"\e[0m")
+	elif [ $DELTA -ge "50" ] || [ $DELTA -le '-50' ]
+	then
+	    DELTASTATUS=$(echo -e "/ \e[0;33mmedium \e[0m")
 	else
-	    DELTASTATUS=$(echo -e '/ \e[0;32mgood \e[0m')
+	    DELTASTATUS=$(echo -e "/ \e[0;32mgood \e[0m")
 	fi
-
 
 	if [ $RT -ge $RTMAX ]
         then
-    	    RT=$(echo -e $RT '/\e[0;31m bad / '$ERR2'\e[0m')
+    	    RT=$(echo -e $RT "/\e[0;31m bad / "$ERR2"\e[0m")
 	else
-	    RT=$(echo -e $RT '/ \e[0;32mgood\e[0m')
+	    RT=$(echo -e $RT "/ \e[0;32mgood\e[0m")
 	fi
 
 
-	echo -e ' NodeID:^' $line '\n' \
-	'ResponseTime:^' $RT '\n' \
-	'Address:^' $ADDRESS '\n' \
-	'User Agent:^' $AGENT '\n' \
-	'Last Seen:^' $LS '\n' \
-	'Port:^' $PORT '/' $PORT_STATUS '\n' \
-	'Protocol:^' $PROTOCOL '\n' \
-	"Last Timeout:^ $LT \n" \
-	'Timeout Rate:^' $TR '/' $TR_STATUS '\n' \
-	'DeltaTime:^' $DELTA  $DELTASTATUS | column -t -s '^'
-	echo '-------------------------------------------------------------------------------'
+	echo -e " NodeID:^" $line "\n" \
+	"ResponseTime:^" $RT "\n" \
+	"Address:^" $ADDRESS "\n" \
+	"User Agent:^" $AGENT "\n" \
+	"Last Seen:^" $LS "\n" \
+	"Port:^" $PORT "/" $PORT_STATUS "\n" \
+	"Protocol:^" $PROTOCOL "\n" \
+	"Last Timeout:^" $LT "\n" \
+	"Timeout Rate:^" $TR "/" $TR_STATUS "\n" \
+	"DeltaTime:^" $DELTA $DELTASTATUS "\n" | column -t -s "^"
+
+	echo "-------------------------------------------------------------------------------"
     done
 fi
