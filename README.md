@@ -26,10 +26,10 @@ wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
 Данные берутся с api.storj.io
 
     Cтатусы<br/>
-    - **good** - в пределах нормы
-    - **bad** - не в пределах нормы
+    **good** - в пределах нормы<br/>
+    **bad** - не в пределах нормы
 
-    <i class="fa fa-info-circle"/> Для Москвы нормой считается значение данного показателя до 1000<br/>
+ *Для Москвы нормой считается значение данного показателя до 1000*<br/>
     
  Выставляется непосредственно бриджем.<br/>
  Данные берутся с api.storj.io
@@ -61,8 +61,8 @@ wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
     
  Cтатусы<br/>
     
-    - **open** - порт открыт
-    - **close** - порт закрыт
+ **open** - порт открыт<br/>
+ **close** - порт закрыт
 
  Порт может быть закрыт по многим причинам.
     
