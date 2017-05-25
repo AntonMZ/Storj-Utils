@@ -34,8 +34,7 @@ wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
 Чем стабильнее работает нода, тем меньше данный показатель.<br/>
 Данные берутся с api.storj.io
 
- Cтатусы
-    
+ Cтатусы<br/>
  **good** - в пределах нормы<br/>
  **bad** - не в пределах нормы
 
@@ -70,7 +69,6 @@ wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
  При запуску скрипта осуществляется проверка порта на ***открыт/закрыт*** через внешний api ресурс.
     
  Cтатусы<br/>
-    
  **open** - порт открыт<br/>
  **close** - порт закрыт
 
@@ -96,11 +94,22 @@ wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
 - [**Timeout Rate**] - <br/>
 Данные берутся с api.storj.io
 
+ Cтатусы<br/>
+ **good** - значение равно 0<br/>
+ **bad** - значение отличное от 0
+
 <hr>
 
 - [**DeltaTime**] - временная дельта<br/>
 Параметр показывает разницу локального времени и времени эталонного NTP сервера.<br/>
 Параметр передается непосредственно бриджем сети.<br/>
+
+ Cтатусы<br/>
+    
+ **bad** - значение больше 500 или -500<br/>
+ **medium** - значение больше 100 или -100<br/>
+ **good** - значение меньше 100 или -100
+
 
 <hr>
 Описание всех параметров будет представлено отдельной публикацией на сайте http://maxrival.com
