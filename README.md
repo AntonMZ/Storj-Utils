@@ -1,6 +1,6 @@
 # Storj-Utils
 
-Скрипт проверки основных параметров работы ноды Storjshare-Cli для Linux.<br/>
+Скрипт проверки основных параметров работы нод Storjshare-Cli для Linux.<br/>
 
 ![Storj bash health script](http://maxrival.com/content/images/2017/05/storj-bash-healt-script-v1.0.2.png)
 
