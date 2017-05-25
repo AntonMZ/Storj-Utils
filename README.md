@@ -13,6 +13,14 @@ wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
 ```
 <hr>
 
+**Hostname** - hostname сервера где размещаются ноды<br/>
+**Ip** - ip адреса сервера где размещаются ноды<br/>
+**Date** - локальное время сервера где размещаются ноды<br/>
+**Open Sessions** - количество открытых storjshare-cli tcp сессий<br/>
+**Storjshare Version** - версия демона, ядра и протокола, используемого storjshare-cli
+
+<hr>
+
 - [**NodeID**] - уникальный идентификатор ноды.<br/>
 Данные берутся из **storjshare status**
 
