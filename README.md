@@ -1,9 +1,9 @@
 # Storj-Utils
 
+Скрипт проверки основных параметров работы ноды Storjshare-Cli для Linux.<br/>
+
 ![Storj bash health script](http://maxrival.com/content/images/2017/05/storj-bash-healt-script-v1.0.2.png)
 
-
-Скрипт проверки основных параметров работы ноды Storjshare-Cli для Linux.<br/>
 Скрипт работает на CentOS Linux release 7.0.1406 (Core)
 <hr>
 Установка
@@ -53,8 +53,9 @@ wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
     - **open** - порт открыт
     - **close** - порт закрыт
 
- Стоит учесть тот момент, что порт может быть закрыт по многим причинам.<br/>
- Самые распространенные:
+    Стоит учесть тот момент, что порт может быть закрыт по многим причинам.<br/>
+    
+    Самые распространенные:
  
     - порт закрыт брандмауэром Windows или iptables
     - порт не "проброшен" в роутере/маршрутизаторе
