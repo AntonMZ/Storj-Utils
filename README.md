@@ -7,7 +7,8 @@
 Скрипт работает на CentOS Linux release 7.0.1406 (Core)
 <hr>
 Установка
-```bash
+
+```
 wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
 ```
 <hr>
