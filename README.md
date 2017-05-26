@@ -9,7 +9,7 @@
 Установка
 
 ```
-wget https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
+wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
 ```
 <hr>
 
