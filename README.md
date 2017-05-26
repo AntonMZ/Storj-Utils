@@ -72,7 +72,8 @@ wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/h
     
  Cтатусы<br/>
  **open** - порт открыт<br/>
- **close** - порт закрыт
+ **close** - порт закрыт<br/>
+ **filtered** - порт открыт, но используется через роутер или фаервол
 
  Порт может быть закрыт по многим причинам.
     
