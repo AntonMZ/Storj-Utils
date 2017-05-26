@@ -11,6 +11,7 @@
 #!/bin/bash
 
 # Var
+VER='1.0.2'
 LOGS_FOLDER='/root/.config/storjshare/logs'
 HOSTNAME=$(hostname)
 DATE=$(date)
@@ -26,7 +27,8 @@ ERR3='Is not null'
 ERR4='Port closed'
 
 echo
-echo -e ' Hostname:^ \e[0;32m'$HOSTNAME'\e[0m \n' \
+echo -e ' Version script:^ \e[0;32m'$VER'\e[0m \n' \
+'Hostname:^ \e[0;32m'$HOSTNAME'\e[0m \n' \
 'Ip:^ \e[0;32m'$IP'\e[0m \n' \
 'Date:^ \e[0;32m'$DATE'\e[0m \n' \
 'Open Sessions:^ \e[0;32m'$SESSIONS'\e[0m \n' \
@@ -62,23 +64,33 @@ then
 	fi
 
 	if [[ $PORT_STATUS == "open" ]]
-	then
-	    PORT_STATUS=$(echo -e "\e[0;32mopen\e[0m")
-	elif [[ $PORT_STATUS == "closed" ]]
-	then
-	    PORT_STATUS=$(echo -e "\e[0;31mclose /" $ERR4 "\e[0m")
-	else
-	    PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
-	fi
+    then
+        PORT_STATUS=$(echo -e "\e[0;32mopen\e[0m")
+    elif [[ $PORT_STATUS == "closed" ]]
+    then
+        PORT_STATUS=$(echo -e "\e[0;31mclose /" $ERR4 "\e[0m")
+    elif [[ $PORT_STATUS == "filtered" ]]
+    then
+        PORT_STATUS=$(echo -e "\e[0;33mfiltered \e[0m")
+    else
+        PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
+    fi
 
-	if [ $DELTA -ge "500" ] || [ $DELTA -le "-500" ]
+
+	if [ -z $DELTA ]
 	then
-	    DELTASTATUS=$(echo -e "/ \e[0;31mbad / "$ERR1"\e[0m")
-	elif [ $DELTA -ge "50" ] || [ $DELTA -le '-50' ]
-	then
-	    DELTASTATUS=$(echo -e "/ \e[0;33mmedium \e[0m")
+	    echo -e '\e[0;35m Enable mode 3 in config file!!!\e[0m'
+	    DELTASTATUS=$(echo -e "\e[0;35mdisable \e[0m")
 	else
-	    DELTASTATUS=$(echo -e "/ \e[0;32mgood \e[0m")
+	    if [ $DELTA -ge "500" ] || [ $DELTA -le "-500" ]
+	    then
+		DELTASTATUS=$(echo -e "/ \e[0;31mbad / "$ERR1"\e[0m")
+	    elif [ $DELTA -ge "50" ] || [ $DELTA -le '-50' ]
+	    then
+		DELTASTATUS=$(echo -e "/ \e[0;33mmedium \e[0m")
+	    else
+		DELTASTATUS=$(echo -e "/ \e[0;32mgood \e[0m")
+	    fi
 	fi
 
 	if [ $RT -ge $RTMAX ]
