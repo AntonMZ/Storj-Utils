@@ -118,4 +118,4 @@ wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/h
 
 
 <hr>
-Описание всех параметров будет представлено отдельной публикацией на сайте http://maxrival.com
+Полная инструкция по работе со скриптом на сайте <a href="http://maxrival.com/ispolzovaniie-health-skripta-dlia-provierki-storj-nod/" target="_blank">maxrival.com</a>
