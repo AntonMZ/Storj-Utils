@@ -4,8 +4,17 @@
 
 ![Storj bash health script](http://maxrival.com/content/images/2017/05/storj-bash-healt-script-v1.0.2.png)
 
-Скрипт работает на CentOS Linux release 7.0.1406 (Core)
+Скрипт работает на CentOS Linux release 7.0.1406 (Core)<br/>
+На других платформах не проверялся.
 <hr>
+
+Для корректной работы скрипта требуется утилита netstat из пакета net-tools.<br/>
+Для установки пакета:
+
+```
+yum install net-tools.x86_64 -y
+```
+
 Установка
 
 ```
