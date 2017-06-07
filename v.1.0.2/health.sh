@@ -15,7 +15,13 @@ VER='1.0.2'
 LOGS_FOLDER='/root/.config/storjshare/logs'
 HOSTNAME=$(hostname)
 DATE=$(date)
-IP=$(hostname -I)
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+	IP=$(hostname -I)
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+	IP=`ifconfig | grep "inet " | grep -v "inet6"  | grep -v "127.0.0.1" | awk '{print $2}'`
+fi
+
 SESSIONS=$(netstat -np | grep node | grep tcp | wc -l)
 STORJ=$(storjshare -V | tr -d '* ')
 #RTURL='https://github.com/AntonMZ/Storj-Utils'
