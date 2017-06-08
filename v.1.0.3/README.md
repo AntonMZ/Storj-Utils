@@ -10,7 +10,8 @@
 - добавлен вывод поля **[Last consigned]**
 - добавлен вывод поля **[Last download]**
 - добавлен вывод поля **[Last upload]**
-- добавлен вывод поля **[Offers count]**:
-- добавлен вывод поля **[Download count]**
-- добавлен вывод поля **[Upload count]**
-- добавлен вывод поля **[Consignment count]**
+- добавлен вывод поля **[Offers counts]**
+- добавлен вывод поля **[Publish counts]**
+- добавлен вывод поля **[Download counts]**
+- добавлен вывод поля **[Upload counts]**
+- добавлен вывод поля **[Consignment counts]**
