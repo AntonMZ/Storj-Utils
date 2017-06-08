@@ -1,4 +1,4 @@
-# Storj-Utils
+.# Storj-Utils
 
 Скрипт проверки основных параметров работы нод Storjshare-Cli для Linux.<br/>
 
