@@ -84,7 +84,7 @@ then
 
 	if [ -z $CONSIGNMENT_COUNT ]
 	then
-	    LAST_DOWNLOAD=$(echo 'None consignments')
+	    CONSIGNMENT_COUNT=$(echo 'None consignments')
 	fi
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Last download
