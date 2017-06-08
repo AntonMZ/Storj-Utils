@@ -132,10 +132,43 @@ wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/h
 
 
 
-
+<hr>
 v.1.0.1
-Start repo
 
+Start repo
+<hr>
 v.1.0.2
 
+Добавлено:
+
+- вывод количества активных tcp сессий открытых storjshare-cli
+- вывод поля **[ResponseTime]** и статус проверки
+- вывод поля **[Address]**
+- вывод поля **[User Agent]**
+- вывод поля **[Last Seen]**
+- вывод поля **[Port]** и статус внешней проверки через api
+- вывод поля **[Protocol]**
+- вывод поля **[Last Timeout]**
+- вывод поля **[Timeout Rate]** и статус проверки
+- вывод поля **[DeltaTime]** и статус проверки
+<hr>
+
 v.1.0.3
+
+Добавлено/исправлено:
+
+- сканирование лог файла за день (лог файлы от storjsgare-daemon теперь генерируются за день)
+- добавлен вывод поля **[Log_file]**
+- исправлен вывод поля **[DeltaTime]** (delta может отсутствовть в лог файле за день)
+- добавлен вывод поля **[Share_allocated]**
+- добавлен вывод поля **[Share_Used]**
+- добавлен вывод поля **[Last publish]**
+- добавлен вывод поля **[Last offer]**
+- добавлен вывод поля **[Last consigned]**
+- добавлен вывод поля **[Last download]**
+- добавлен вывод поля **[Last upload]**
+- добавлен вывод поля **[Offers counts]**
+- добавлен вывод поля **[Publish counts]**
+- добавлен вывод поля **[Download counts]**
+- добавлен вывод поля **[Upload counts]**
+- добавлен вывод поля **[Consignment counts]**
