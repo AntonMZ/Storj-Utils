@@ -7,17 +7,18 @@
 # Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils
 #
 
-
 #!/bin/bash
 
-# Var
-VER='1.0.3'
+# Var1
+VER='1.0.4'
 LOGS_FOLDER='/root/.config/storjshare/logs'
+WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
 MONTH=$(date +%m | tr -d '0')
 DAY=$(date +%d | tr -d '0')
 DATE=$(date)
+WATCHDOG_LOG_DATE=$(date +%x)
 IP=$(hostname -I)
 SESSIONS=$(netstat -np | grep node | grep tcp | wc -l)
 STORJ=$(storjshare -V)
@@ -28,6 +29,10 @@ ERR2='Big time response'
 ERR3='Is not null'
 ERR4='Port closed'
 
+if [ $1 = "--api" ]
+then
+  echo 'api'
+else
 clear
 echo "----------------------------------------------------------------------------------------------------------------------------------------"
 echo -e ' Version script:^ \e[0;32m'$VER'\e[0m \n' \
@@ -36,7 +41,7 @@ echo -e ' Version script:^ \e[0;32m'$VER'\e[0m \n' \
 'Date:^ \e[0;32m'$DATE'\e[0m \n' \
 'Open Sessions:^ \e[0;32m'$SESSIONS'\e[0m \n' \
 'Storjshare Version:^\e[0;32m' $STORJ'\e[0m' | column -t -s '^'
-
+fi
 
 DATA=$(storjshare status | grep running | awk -F ' ' {'print $2'})
 
@@ -58,6 +63,15 @@ then
 	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
 	DELTA=$(grep -R 'delta' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | tail -1 | awk -F ',' {'print $3'} | awk -F ' ' {'print $2'})
 	LOG_FILE=$(echo "$LOGS_FOLDER/$line"_"$YEAR-$MONTH-$DAY.log")
+  #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Watchdog restart couns
+  RESTART_NODE_COUNT=$(grep $WATCHDOG_LOG_DATE $WATCHDOG_LOG | grep 'RESTARTED' | grep $line | wc -l)
+  if [ $RESTART_NODE_COUNT = 0 ]
+    then
+      RESTART_NODE_COUNT=$(echo -e "\e[0;32m0\e[0m")
+    else
+      RESTART_NODE_COUNT=$(echo -e "\e[0;31m$RESTART_NODE_COUNT\e[0m")
+  fi
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Share allocated
 	SHARE_ALLOCATED_TMP=$(cat $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | grep storageAllocated | tail -1 | awk -F ':' {'print $6'} | awk -F ',' {'print $1'})
@@ -194,6 +208,7 @@ then
 	fi
 
 	echo -e " NodeID:^" $line "\n" \
+  "Restarts Node:^" $RESTART_NODE_COUNT "\n" \
 	"Log_file:^ "$LOG_FILE "\n" \
 	"ResponseTime:^" $RT "\n" \
 	"Address:^" $ADDRESS "\n" \
