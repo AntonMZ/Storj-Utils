@@ -58,8 +58,6 @@ then
 	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
 	DELTA=$(grep -R 'delta' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | tail -1 | awk -F ',' {'print $3'} | awk -F ' ' {'print $2'})
 	LOG_FILE=$(echo "$LOGS_FOLDER/$line"_"$YEAR-$MONTH-$DAY.log")
-	OFFER_COUNT=$(grep -R 'OFFER' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | wc -l)
-
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Share allocated
 	SHARE_ALLOCATED_TMP=$(cat $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | grep storageAllocated | tail -1 | awk -F ':' {'print $6'} | awk -F ',' {'print $1'})
@@ -68,24 +66,54 @@ then
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Share_used
 	SHARE_USED_TMP=$(cat $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | grep storageUsed | tail -1 | awk -F ':' {'print $7'} | awk -F ',' {'print $1'})
-        SHARE_USED=$(expr $SHARE_USED_TMP / 1048576)
+  SHARE_USED=$(expr $SHARE_USED_TMP / 1048576)
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Last publish
 	LAST_PUBLISH=$(grep -R 'PUBLISH' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | tail -1 | awk -F ',' {'print $NF'} | tr -d 'timestamp":"}')
+
+  if [ -z $LAST_PUBLISH ]
+  then
+      LAST_PUBLISH=$(echo 'None publish')
+  fi
+  #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Publish counts
+  PUBLISH_COUNT=$(grep -R 'PUBLISH' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | wc -l)
+  if [ -z $PUBLISH_COUNT ]
+  then
+      PUBLISH_COUNT=$(echo 0)
+  fi
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Last offer
 	LAST_OFFER=$(grep -R 'OFFER' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | tail -1 | awk -F ',' {'print $NF'} | tr -d 'timestamp":"}')
+
+  if [ -z $LAST_OFFER ]
+  then
+      LAST_OFFER=$(echo 'None offers')
+  fi
+  #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Offers counts
+  OFFER_COUNT=$(grep -R 'OFFER' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | wc -l)
+
+  if [ -z $OFFER_COUNT ]
+  then
+      OFFER_COUNT=$(echo 0)
+  fi
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Last consigned
 	LAST_CONSIGNMENT=$(grep -R 'consignment' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | tail -1 | awk -F ',' {'print $NF'} | tr -d 'timestamp":"}')
-	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+  if [ -z $LAST_CONSIGNMENT ]
+  then
+      LAST_CONSIGNMENT=$(echo 'None consignments')
+  fi
+  #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Consigned counts
 	CONSIGNMENT_COUNT=$(grep -R 'consignment' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | wc -l)
 
-	if [ -z $CONSIGNMENT_COUNT ]
-	then
-	    CONSIGNMENT_COUNT=$(echo 'None consignments')
-	fi
+  if [ -z $CONSIGNMENT_COUNT ]
+  then
+      CONSIGNMENT_COUNT=$(echo 0)
+  fi
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Last download
 	#
@@ -184,6 +212,7 @@ then
 	"Last download:^" $LAST_DOWNLOAD "\n" \
 	"Last upload:^" $LAST_UPLOAD "\n" \
 	"Offers count:^" $OFFER_COUNT "\n" \
+  "Publish count:^" $PUBLISH_COUNT "\n" \
 	"Download count:^" $DOWNLOAD_COUNT "\n" \
 	"Upload count:^" $UPLOAD_COUNT "\n" \
 	"Consignment count:^" $CONSIGNMENT_COUNT "\n" | column -t -s "^"
