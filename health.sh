@@ -211,11 +211,11 @@ then
 	"Last consigned:^" $LAST_CONSIGNMENT "\n" \
 	"Last download:^" $LAST_DOWNLOAD "\n" \
 	"Last upload:^" $LAST_UPLOAD "\n" \
-	"Offers count:^" $OFFER_COUNT "\n" \
-  "Publish count:^" $PUBLISH_COUNT "\n" \
-	"Download count:^" $DOWNLOAD_COUNT "\n" \
-	"Upload count:^" $UPLOAD_COUNT "\n" \
-	"Consignment count:^" $CONSIGNMENT_COUNT "\n" | column -t -s "^"
+	"Offers counts:^" $OFFER_COUNT "\n" \
+  "Publish counts:^" $PUBLISH_COUNT "\n" \
+	"Download counts:^" $DOWNLOAD_COUNT "\n" \
+	"Upload counts:^" $UPLOAD_COUNT "\n" \
+	"Consignment counts:^" $CONSIGNMENT_COUNT "\n" | column -t -s "^"
 
 	echo "----------------------------------------------------------------------------------------------------------------------------------------"
     done
