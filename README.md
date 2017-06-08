@@ -1,4 +1,4 @@
-.# Storj-Utils
+# Storj-Utils
 
 Скрипт проверки основных параметров работы нод Storjshare-Cli для Linux.<br/>
 
@@ -128,3 +128,14 @@ wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/h
 
 <hr>
 Полная инструкция по работе со скриптом на сайте <a href="http://maxrival.com/ispolzovaniie-health-skripta-dlia-provierki-storj-nod/" target="_blank">maxrival.com</a>
+
+
+
+
+
+v.1.0.1
+Start repo
+
+v.1.0.2
+
+v.1.0.3
