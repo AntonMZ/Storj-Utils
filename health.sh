@@ -66,12 +66,18 @@ then
 	LOG_FILE=$(echo "$LOGS_FOLDER/$line"_"$YEAR-$MONTH-$DAY.log")
   #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
   # Watchdog restart couns
-  RESTART_NODE_COUNT=$(grep $WATCHDOG_LOG_DATE $WATCHDOG_LOG | grep 'RESTARTED' | grep $line | wc -l)
-  if [ $RESTART_NODE_COUNT = 0 ]
+
+  if ! [ -f $WATCHDOG_LOG ]
+  then
+    RESTART_NODE_COUNT=$(echo -e "\e[0;32mNo log file\e[0m")
+  else
+    RESTART_NODE_COUNT=$(grep $WATCHDOG_LOG_DATE $WATCHDOG_LOG | grep 'RESTARTED' | grep $line | wc -l)
+    if [ $RESTART_NODE_COUNT = 0 ]
     then
       RESTART_NODE_COUNT=$(echo -e "\e[0;32m0\e[0m")
     else
       RESTART_NODE_COUNT=$(echo -e "\e[0;31m$RESTART_NODE_COUNT\e[0m")
+    fi
   fi
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Share allocated
