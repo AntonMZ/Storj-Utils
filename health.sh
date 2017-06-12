@@ -38,7 +38,6 @@ echo -e ' Version script:^ \e[0;32m'$VER'\e[0m \n' \
 'Date:^ \e[0;32m'$DATE'\e[0m \n' \
 'Open Sessions:^ \e[0;32m'$SESSIONS'\e[0m \n' \
 'Storjshare Version:^\e[0;32m' $STORJ'\e[0m' | column -t -s '^'
-fi
 
 DATA=$(storjshare status | grep running | awk -F ' ' {'print $2'})
 
