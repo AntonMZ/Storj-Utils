@@ -27,7 +27,6 @@ RTMAX='1000'
 ERR1='Big delta time. Sync time with NTP server'
 ERR2='Big time response'
 ERR3='Is not null'
-ERR4='Port closed'
 
 if [ $1 = "--api" ]
 then
@@ -174,10 +173,10 @@ then
     	    PORT_STATUS=$(echo -e "\e[0;32mopen\e[0m")
 	elif [[ $PORT_STATUS == "closed" ]]
 	then
-    	    PORT_STATUS=$(echo -e "\e[0;31mclose /" $ERR4 "\e[0m")
+    	    PORT_STATUS=$(echo -e "\e[0;31mclosed\e[0m")
 	elif [[ $PORT_STATUS == "filtered" ]]
 	then
-    	    PORT_STATUS=$(echo -e "\e[0;33mfiltered \e[0m")
+    	    PORT_STATUS=$(echo -e "\e[0;33mfiltered\e[0m")
 	else
     	    PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
 	fi
