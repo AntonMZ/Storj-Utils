@@ -10,6 +10,7 @@
 #!/bin/bash
 
 # Variables
+#------------------------------------------------------------------------------
 VER='1.0.4'
 LOGS_FOLDER='/root/.config/storjshare/logs'
 WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
@@ -27,6 +28,7 @@ RTMAX='1000'
 ERR1='Big delta time. Sync time with NTP server'
 ERR2='Big time response'
 ERR3='Is not null'
+#------------------------------------------------------------------------------
 
 if [ $1 = "--api" ]
 then
