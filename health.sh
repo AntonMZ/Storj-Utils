@@ -9,7 +9,7 @@
 
 #!/bin/bash
 
-# Var1
+# Variables
 VER='1.0.4'
 LOGS_FOLDER='/root/.config/storjshare/logs'
 WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
