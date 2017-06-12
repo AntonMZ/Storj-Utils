@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Storj-Utils
 
 Скрипт проверки основных параметров работы нод Storjshare-Cli для Linux.<br/>
@@ -172,3 +173,6 @@ v.1.0.3
 - добавлен вывод поля **[Download counts]**
 - добавлен вывод поля **[Upload counts]**
 - добавлен вывод поля **[Consignment counts]**
+=======
+v.1.0.4
+>>>>>>> origin/v.1.0.4
