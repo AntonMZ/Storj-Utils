@@ -11,6 +11,13 @@
 
 # Variables
 #------------------------------------------------------------------------------
+
+# check if jq is installed
+if ! hash jq 2>/dev/null; then
+   echo "JQ is NOT installed"
+   exit
+fi
+
 VER='1.0.4'
 LOGS_FOLDER='/root/.config/storjshare/logs'
 WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
@@ -38,8 +45,9 @@ ERR2='Big time response'
 ERR3='Is not null'
 #------------------------------------------------------------------------------
 
-clear
-echo "----------------------------------------------------------------------------------------------------------------------------------------"
+#clear
+printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+
 echo -e ' Version script:^ \e[0;32m'$VER'\e[0m \n' \
 'Hostname:^ \e[0;32m'$HOSTNAME'\e[0m \n' \
 'Ip:^ \e[0;32m'$IP'\e[0m \n' \
@@ -52,7 +60,8 @@ DATA=$(storjshare status | grep running | awk -F ' ' {'print $2'})
 
 if [ -n "$DATA" ];
 then
-    echo "----------------------------------------------------------------------------------------------------------------------------------------"
+    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+
     for line in $DATA
     do
 	CURL=$(curl -s https://api.storj.io/contacts/$line)
