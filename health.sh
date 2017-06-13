@@ -18,8 +18,16 @@ YEAR=$(date +%Y)
 MONTH=$(date +%m | tr -d '0')
 DAY=$(date +%d | tr -d '0')
 DATE=$(date)
-IP=$(hostname -I)
-SESSIONS=$(netstat -np | grep node | grep tcp | wc -l)
+
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        IP=$(hostname -I)
+	SESSIONS=$(netstat -np | grep node | grep tcp | wc -l)
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        IP=`ifconfig | grep "inet " | grep -v "inet6"  | grep -v "127.0.0.1" | awk '{print $2}' | tr '\n' ' '`
+	SS_PID=$(ps -aux | grep farmer.js | grep -v grep | awk '{print $2}')
+	SESSIONS=$(sockstat -c | grep -v "stream" | grep " $SS_PID " | wc -l | awk '{print $1}')
+fi
+
 STORJ=$(storjshare -V)
 RTMAX='1000'
 
@@ -47,6 +55,7 @@ then
     for line in $DATA
     do
 	CURL=$(curl -s https://api.storj.io/contacts/$line)
+	echo $CURL
 	ADDRESS=$(echo $CURL | awk -F ',' {'print $3'} | tr -d '"' | tr -d '{address:')
 	LS=$(echo $CURL | awk -F ',' {'print $1'} | tr -d '"' | tr -d '{lastSeen:')
 	RT=$(echo $CURL | awk -F ',' {'print $6'} | awk -F ':' {'print $2'} | awk -F '.' {'print $1'})
@@ -185,6 +194,8 @@ then
 	    fi
 	fi
 
+	echo "RT: $RT\n";
+	echo "RTMAX: $RTMAX\n";
 
 	if [ $RT -ge $RTMAX ]
         then
@@ -212,7 +223,7 @@ then
 	"Last download:^" $LAST_DOWNLOAD "\n" \
 	"Last upload:^" $LAST_UPLOAD "\n" \
 	"Offers counts:^" $OFFER_COUNT "\n" \
-  "Publish counts:^" $PUBLISH_COUNT "\n" \
+	"Publish counts:^" $PUBLISH_COUNT "\n" \
 	"Download counts:^" $DOWNLOAD_COUNT "\n" \
 	"Upload counts:^" $UPLOAD_COUNT "\n" \
 	"Consignment counts:^" $CONSIGNMENT_COUNT "\n" | column -t -s "^"
