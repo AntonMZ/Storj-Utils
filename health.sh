@@ -1,18 +1,19 @@
 #
 # Script By Anton Zheltyshev
-# Version 1.0.3
+# Version 1.0.4
 # Contacts info@maxrival.com
 #
 # Github Storj Project - https://github.com/Storj/storjshare-daemon
 # Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils
 #
 
-
 #!/bin/bash
 
-# Var
-VER='1.0.3'
+# Variables
+#------------------------------------------------------------------------------
+VER='1.0.4'
 LOGS_FOLDER='/root/.config/storjshare/logs'
+WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
 MONTH=$(date +%m | tr -d '0')
@@ -28,13 +29,14 @@ elif [[ "$OSTYPE" == "freebsd"* ]]; then
 	SESSIONS=$(sockstat -c | grep -v "stream" | grep " $SS_PID " | wc -l | awk '{print $1}')
 fi
 
+WATCHDOG_LOG_DATE=$(date +%x)
 STORJ=$(storjshare -V)
 RTMAX='1000'
 
 ERR1='Big delta time. Sync time with NTP server'
 ERR2='Big time response'
 ERR3='Is not null'
-ERR4='Port closed'
+#------------------------------------------------------------------------------
 
 clear
 echo "----------------------------------------------------------------------------------------------------------------------------------------"
@@ -45,7 +47,6 @@ echo -e ' Version script:^ \e[0;32m'$VER'\e[0m \n' \
 'Open Sessions:^ \e[0;32m'$SESSIONS'\e[0m \n' \
 'Storjshare Version:^\e[0;32m' $STORJ'\e[0m' | column -t -s '^'
 
-
 DATA=$(storjshare status | grep running | awk -F ' ' {'print $2'})
 
 
@@ -55,18 +56,32 @@ then
     for line in $DATA
     do
 	CURL=$(curl -s https://api.storj.io/contacts/$line)
-	echo $CURL
-	ADDRESS=$(echo $CURL | awk -F ',' {'print $3'} | tr -d '"' | tr -d '{address:')
-	LS=$(echo $CURL | awk -F ',' {'print $1'} | tr -d '"' | tr -d '{lastSeen:')
-	RT=$(echo $CURL | awk -F ',' {'print $6'} | awk -F ':' {'print $2'} | awk -F '.' {'print $1'})
-	AGENT=$(echo $CURL | awk -F ',' {'print $4'} | awk -F ':' {'print $2'} | tr -d '"')
-	PORT=$(echo $CURL | awk -F ',' {'print $2'} | tr -d '"' | tr -d 'port:')
-	PROTOCOL=$(echo ' ' $CURL | awk -F ',' {'print $5'} | tr -d '"' | tr -d 'protocol:')
-	LT=$(echo $CURL | awk -F ',' {'print $7'} | tr -d '"' | tr -d '{lastTimeout:')
-	TR=$(echo $CURL | awk -F ',' {'print $8'} | tr -d '"' | tr -d '{timeoutRate:')
+	ADDRESS=$(echo $CURL | jq '.address' | tr -d '"')
+	LS=$(echo $CURL | jq '.lastSeen'| tr -d '"')
+	RT=$(echo $CURL | jq '.responseTime' | awk -F '.' {'print $1'})
+	AGENT=$(echo $CURL | jq '.userAgent' | tr -d '"')
+	PORT=$(echo $CURL | jq '.port')
+	PROTOCOL=$(echo $CURL | jq '.protocol'| tr -d '"')
+	LT=$(echo $CURL | jq '.lastTimeout' | tr -d '"')
+	TR=$(echo $CURL | jq '.timeoutRate' | tr -d '"')
 	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
 	DELTA=$(grep -R 'delta' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | tail -1 | awk -F ',' {'print $3'} | awk -F ' ' {'print $2'})
 	LOG_FILE=$(echo "$LOGS_FOLDER/$line"_"$YEAR-$MONTH-$DAY.log")
+  #-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  # Watchdog restart couns
+
+  if ! [ -f $WATCHDOG_LOG ]
+  then
+    RESTART_NODE_COUNT=$(echo -e "\e[0;32mNo log file\e[0m")
+  else
+    RESTART_NODE_COUNT=$(grep $WATCHDOG_LOG_DATE $WATCHDOG_LOG | grep 'RESTARTED' | grep $line | wc -l)
+    if [ $RESTART_NODE_COUNT = 0 ]
+    then
+      RESTART_NODE_COUNT=$(echo -e "\e[0;32m0\e[0m")
+    else
+      RESTART_NODE_COUNT=$(echo -e "\e[0;31m$RESTART_NODE_COUNT\e[0m")
+    fi
+  fi
 	#-------------------------------------------------------------------------------------------------------------------------------------------------------------------
 	# Share allocated
 	SHARE_ALLOCATED_TMP=$(cat $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | grep storageAllocated | tail -1 | awk -F ':' {'print $6'} | awk -F ',' {'print $1'})
@@ -169,10 +184,10 @@ then
     	    PORT_STATUS=$(echo -e "\e[0;32mopen\e[0m")
 	elif [[ $PORT_STATUS == "closed" ]]
 	then
-    	    PORT_STATUS=$(echo -e "\e[0;31mclose /" $ERR4 "\e[0m")
+    	    PORT_STATUS=$(echo -e "\e[0;31mclosed\e[0m")
 	elif [[ $PORT_STATUS == "filtered" ]]
 	then
-    	    PORT_STATUS=$(echo -e "\e[0;33mfiltered \e[0m")
+    	    PORT_STATUS=$(echo -e "\e[0;33mfiltered\e[0m")
 	else
     	    PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
 	fi
@@ -205,6 +220,7 @@ then
 	fi
 
 	echo -e " NodeID:^" $line "\n" \
+  "Restarts Node:^" $RESTART_NODE_COUNT "\n" \
 	"Log_file:^ "$LOG_FILE "\n" \
 	"ResponseTime:^" $RT "\n" \
 	"Address:^" $ADDRESS "\n" \
