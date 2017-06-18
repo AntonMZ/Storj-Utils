@@ -9,15 +9,28 @@
 
 #!/bin/bash
 
-#!/bin/bash
-
-STATUS=$(/usr/local/bin/storjshare status | grep stopped | awk -F ' ' {'print $2'})
+STATUS=$(storjshare status | grep stopped | awk -F ' ' {'print $2'})
 #echo $STATUS
-IP=$(hostname -I)
+
+if [ "$OSTYPE" == "linux-gnu" ]; then
+        IP=$(hostname -I)
+        SESSIONS=$(netstat -np | grep node | grep tcp | wc -l)
+        WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        IP=`ifconfig | grep "inet " | grep -v "inet6"  | grep -v "127.0.0.1" | awk '{print $2}' | tr '\n' ' '`
+        SS_PID=$(ps -aux | grep farmer.js | grep -v grep | awk '{print $2}')
+        SESSIONS=$(sockstat -c | grep -v "stream" | grep " $SS_PID " | wc -l | awk '{print $1}')
+else
+        IP="n/a for $OSTYPE"
+        SESSIONS="n/a for $OSTYPE"
+fi
+
 DATE=$(date +%x:%H:%M:%S:%z)
+
 #
 # Bot API key Telegram
 API_KEY=""
+
 #
 # Your id in Telegram
 CHAT_ID=""
