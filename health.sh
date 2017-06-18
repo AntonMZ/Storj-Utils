@@ -25,11 +25,11 @@ YEAR=$(date +%Y)
 MONTH=$(date +%m | tr -d '0')
 DAY=$(date +%d | tr -d '0')
 DATE=$(date)
+WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
 
 if [ "$OSTYPE" == "linux-gnu" ]; then
         IP=$(hostname -I)
 	SESSIONS=$(netstat -np | grep node | grep tcp | wc -l)
-	WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
 elif [[ "$OSTYPE" == "freebsd"* ]]; then
         IP=`ifconfig | grep "inet " | grep -v "inet6"  | grep -v "127.0.0.1" | awk '{print $2}' | tr '\n' ' '`
 	SS_PID=$(ps -aux | grep farmer.js | grep -v grep | awk '{print $2}')
@@ -77,17 +77,15 @@ if [ -n "$DATA" ]; then
 	LOG_FILE=$(echo "$LOGS_FOLDER/$line"_"$YEAR-$MONTH-$DAY.log")
 
 # Watchdog restart couns
-if [ "$OSTYPE" == "linux-gnu" ]; then
-	if [ ! -f $WATCHDOG_LOG ]; then
-		RESTART_NODE_COUNT=$(echo -e "\e[0;32mNo log file\e[0m")
-	else
-		RESTART_NODE_COUNT=$(grep $WATCHDOG_LOG_DATE $WATCHDOG_LOG | grep 'RESTARTED' | grep $line | wc -l)
+if [ ! -f $WATCHDOG_LOG ]; then
+	RESTART_NODE_COUNT=$(echo -e "\e[0;32mNo log file\e[0m")
+else
+	RESTART_NODE_COUNT=$(grep $WATCHDOG_LOG_DATE $WATCHDOG_LOG | grep 'RESTARTED' | grep $line | wc -l)
 
-		if $RESTART_NODE_COUNT = 0; then
-			RESTART_NODE_COUNT=$(echo -e "\e[0;32m0\e[0m")
-		else
-			RESTART_NODE_COUNT=$(echo -e "\e[0;31m$RESTART_NODE_COUNT\e[0m")
-		fi
+	if [ $RESTART_NODE_COUNT = 0 ]; then
+		RESTART_NODE_COUNT=$(echo -e "\e[0;32m0\e[0m")
+	else
+		RESTART_NODE_COUNT=$(echo -e "\e[0;31m$RESTART_NODE_COUNT\e[0m")
 	fi
 fi
 
@@ -229,8 +227,8 @@ echo -e " NodeID:^" $line "\n" \
 	"Last Timeout:^" $LT "\n" \
 	"Timeout Rate:^" $TR "/" $TR_STATUS "\n" \
 	"DeltaTime:^" $DELTA $DELTASTATUS "\n" \
-	"Share_allocated:^" $SHARE_ALLOCATED "Mb (telemetry report)\n" \
-	"Share_Used:^" $SHARE_USED "Mb (telemetry report)\n" \
+	"Share_allocated:^" $SHARE_ALLOCATED "MB (telemetry report)\n" \
+	"Share_Used:^" $SHARE_USED "MB (telemetry report)\n" \
 	"Last publish:^" $LAST_PUBLISH "\n" \
 	"Last offer:^" $LAST_OFFER "\n" \
 	"Last consigned:^" $LAST_CONSIGNMENT "\n" \
