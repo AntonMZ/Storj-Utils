@@ -104,7 +104,7 @@ SHARE_USED=$(expr $SHARE_USED_TMP / 1048576)
 # Last publish
 LAST_PUBLISH=$(grep -R 'PUBLISH' $LOGS_FOLDER/$line\_$YEAR-$MONTH-$DAY.log | tail -1 | awk -F ',' {'print $NF'} | tr -d 'timestamp":"}')
 
-if [ -z $LAST_PUBLISH ]; then 
+if [ -z $LAST_PUBLISH ]; then
 	LAST_PUBLISH=$(echo 'None publish')
 fi
 
@@ -192,6 +192,8 @@ elif [ $PORT_STATUS == "closed" ]; then
     PORT_STATUS=$(echo -e "\e[0;31mclosed\e[0m")
 elif [ $PORT_STATUS == "filtered" ]; then
     PORT_STATUS=$(echo -e "\e[0;33mfiltered\e[0m")
+elif [ $PORT_STATUS == "wrong parametrs" ]; then
+    PORT_STATUS=$(echo -e "\e[0;31mwrong parametrs\e[0m")
 else
     PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
 fi
