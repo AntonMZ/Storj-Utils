@@ -22,8 +22,8 @@ VER='1.0.4'
 LOGS_FOLDER='/root/.config/storjshare/logs'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
-MONTH=$(date +%m | tr -d '0')
-DAY=$(date +%d | tr -d '0')
+MONTH=$(date +%-m)
+DAY=$(date +%-d)
 DATE=$(date)
 WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
 
