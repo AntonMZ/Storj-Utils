@@ -30,6 +30,21 @@ if [ -z "hash netstat 2>/dev/null" ]; then
   exit 0
 fi
 
+function help(){
+    echo -e " \n" \
+    "Github Storj Project - https://github.com/Storj/storjshare-daemon\n"\
+    "Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils\n"\
+    " \n" \
+    "--cli - enable cli mode script for console \n" \
+    "--api - enable appi mode script for send data in monitoring site\n" \
+    ""
+}
+
+if [ "$1" == '' ]; then
+  help
+  exit 0
+fi
+
 # Variables
 #------------------------------------------------------------------------------
 VER='1.0.5'
@@ -60,22 +75,34 @@ RTMAX='1000'
 ERR2='Big time response'
 ERR3='Is not null'
 
+if [ "$1" == --cli ];then
+{
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+}
+fi
 
-echo -e " Version script:^ \e[0;32m $VER \e[0m \n" \
-"Hostname:^ \e[0;32m $HOSTNAME \e[0m \n" \
-"Ip:^ \e[0;32m $IP \e[0m \n" \
-"Date:^ \e[0;32m $DATE \e[0m \n" \
-"Open Sessions:^ \e[0;32m $SESSIONS \e[0m \n" \
-"Storjshare Version:^ \e[0;32m $STORJ \e[0m" | column -t -s '^'
+if [ "$1" == --cli ];then
+{
+  echo -e " Version script:^ \e[0;32m $VER \e[0m \n" \
+  "Hostname:^ \e[0;32m $HOSTNAME \e[0m \n" \
+  "Ip:^ \e[0;32m $IP \e[0m \n" \
+  "Date:^ \e[0;32m $DATE \e[0m \n" \
+  "Open Sessions:^ \e[0;32m $SESSIONS \e[0m \n" \
+  "Storjshare Version:^ \e[0;32m $STORJ \e[0m" | column -t -s '^'
+}
+fi
 
 DATA=$(storjshare status | grep running | awk -F ' ' '{print $2}')
 
 if [ -n "$DATA" ]; then
-    printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+  if [ "$1" == --cli ];then
+    {
+      printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
+    }
+  fi
 
-    for line in $DATA
-    do
+  for line in $DATA
+  do
 	CURL=$(curl -s https://api.storj.io/contacts/"$line")
 	ADDRESS=$(echo "$CURL" | jq -r '.address')
 	LS=$(echo "$CURL" | jq -r '.lastSeen')
@@ -230,6 +257,8 @@ else
     RT=$(echo -e "$RT / \e[0;32mgood\e[0m")
 fi
 
+if [ "$1" == --cli ];then
+{
 echo -e " NodeID:^ $line \n" \
   "Restarts Node:^ $RESTART_NODE_COUNT \n" \
 	"Log_file:^ $LOG_FILE \n" \
@@ -256,5 +285,39 @@ echo -e " NodeID:^ $line \n" \
 	"Consignment counts:^ $CONSIGNMENT_COUNT \n" | column -t -s '^'
 
 	printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
-    done
+}
+fi
+
+if [ "$1" == --api ];then
+{
+  $line
+  $RESTART_NODE_COUNT
+	$LOG_FILE
+	$RT
+	$ADDRESS
+	$AGENT
+	$LS
+	$PORT
+  $PORT_STATUS
+	$PROTOCOL
+	$LT
+	$TR
+  $TR_STATUS
+	$DELTA $DELTASTATUS
+	$SHARE_ALLOCATED
+	$SHARE_USED
+	$LAST_PUBLISH
+	$LAST_OFFER
+	$LAST_CONSIGNMENT
+	$LAST_DOWNLOAD
+	$LAST_UPLOAD
+	$OFFER_COUNT
+	$PUBLISH_COUNT
+	$DOWNLOAD_COUNT
+	$UPLOAD_COUNT
+	$CONSIGNMENT_COUNT
+}
+fi
+
+done
 fi
