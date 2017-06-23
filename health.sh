@@ -113,8 +113,8 @@ if [ -n "$DATA" ]; then
 	LT=$(echo "$CURL" | jq -r '.lastTimeout')
 	TR=$(echo "$CURL" | jq -r '.timeoutRate')
 	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
-	DELTA=$(grep -R 'delta' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | tail -1 | awk -F ',' '{print $3}' | awk -F ' ' '{print $2}')
 	LOG_FILE="$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log
+	DELTA=$(grep -R 'delta' $LOG_FILE | tail -1 | awk -F ',' '{print $3}' | awk -F ' ' '{print $2}')
 
 # Watchdog restart couns
 if [ ! -f $WATCHDOG_LOG ]; then
@@ -131,18 +131,18 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Share allocated
-SHARE_ALLOCATED_TMP=$(cat < "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | grep storageAllocated | tail -1 | awk -F ':' '{print $6}' | awk -F ',' '{print $1}')
+SHARE_ALLOCATED_TMP=$(cat < $LOG_FILE | grep storageAllocated | tail -1 | awk -F ':' '{print $6}' | awk -F ',' '{print $1}')
 let SHARE_ALLOCATED=$SHARE_ALLOCATED_TMP/1024/1024/1024
 
 #
 #--------------------------------------------------------------------------------------------
 # Share_used
-SHARE_USED_TMP=$(cat < "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | grep storageUsed | tail -1 | awk -F ':' '{print $7}' | awk -F ',' '{print $1}')
+SHARE_USED_TMP=$(cat < $LOG_FILE | grep storageUsed | tail -1 | awk -F ':' '{print $7}' | awk -F ',' '{print $1}')
 let SHARE_USED=$SHARE_USED_TMP/1024/1024/1024
 
 #--------------------------------------------------------------------------------------------
 # Last publish
-LAST_PUBLISH=$(grep -R 'PUBLISH' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_PUBLISH=$(grep -R 'PUBLISH' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_PUBLISH" ]; then
 	LAST_PUBLISH=$(echo '-')
@@ -150,14 +150,14 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Publish counts
-PUBLISH_COUNT=$(grep -cR 'PUBLISH' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log)
+PUBLISH_COUNT=$(grep -cR 'PUBLISH' $LOG_FILE)
 if [ -z "$PUBLISH_COUNT" ]; then
 	PUBLISH_COUNT=$(echo '-')
 fi
 
 #--------------------------------------------------------------------------------------------
 # Last offer
-LAST_OFFER=$(grep -R 'OFFER' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_OFFER=$(grep -R 'OFFER' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_OFFER" ]; then
 	LAST_OFFER=$(echo '-')
@@ -165,7 +165,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Offers counts
-OFFER_COUNT=$(grep -cR 'OFFER' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log)
+OFFER_COUNT=$(grep -cR 'OFFER' $LOG_FILE)
 
 if [ -z "$OFFER_COUNT" ]; then
 	OFFER_COUNT=$(echo '-')
@@ -173,7 +173,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Last consigned
-LAST_CONSIGNMENT=$(grep -R 'consignment' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_CONSIGNMENT=$(grep -R 'consignment' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_CONSIGNMENT" ]; then
 	LAST_CONSIGNMENT=$(echo '-')
@@ -181,7 +181,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Consigned counts
-CONSIGNMENT_COUNT=$(grep -cR 'consignment' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log)
+CONSIGNMENT_COUNT=$(grep -cR 'consignment' $LOG_FILE)
 
 if [ -z "$CONSIGNMENT_COUNT" ]; then
 	CONSIGNMENT_COUNT=$(echo '-')
@@ -190,21 +190,21 @@ fi
 #--------------------------------------------------------------------------------------------
 # Last download
 #
-LAST_DOWNLOAD=$(grep -R 'download' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_DOWNLOAD=$(grep -R 'download' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 if [ -z "$LAST_DOWNLOAD" ]; then
 	LAST_DOWNLOAD=$(echo '-')
 fi
 
 #--------------------------------------------------------------------------------------------
 # Download counts
-DOWNLOAD_COUNT=$(grep -cR 'download' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log)
+DOWNLOAD_COUNT=$(grep -cR 'download' $LOG_FILE)
 if [ -z "$DOWNLOAD_COUNT" ]; then
 	DOWNLOAD_COUNT=$(echo '-')
 fi
 
 #--------------------------------------------------------------------------------------------
 # Last upload
-LAST_UPLOAD=$(grep -R 'upload' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_UPLOAD=$(grep -R 'upload' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_UPLOAD" ]; then
 	LAST_UPLOAD=$(echo '-')
@@ -212,7 +212,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Upload counts
-UPLOAD_COUNT=$(grep -cR 'upload' "$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log)
+UPLOAD_COUNT=$(grep -cR 'upload' $LOG_FILE)
 
 if [ -z "$UPLOAD_COUNT" ]; then
 	UPLOAD_COUNT=$(echo '-')
@@ -260,7 +260,7 @@ fi
 if [ "$1" == --cli ];then
 {
 echo -e " NodeID:^ $line \n" \
-  "Restarts Node:^ $RESTART_NODE_COUNT \n" \
+	"Restarts Node:^ $RESTART_NODE_COUNT \n" \
 	"Log_file:^ $LOG_FILE \n" \
 	"ResponseTime:^ $RT \n" \
 	"Address:^ $ADDRESS \n" \
