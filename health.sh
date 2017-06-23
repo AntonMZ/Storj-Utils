@@ -2,7 +2,7 @@
 
 #
 # Script By Anton Zheltyshev
-# Version 1.0.4
+# Version 1.0.5
 # Contacts info@maxrival.com
 #
 # Github Storj Project - https://github.com/Storj/storjshare-daemon
@@ -32,7 +32,7 @@ fi
 
 # Variables
 #------------------------------------------------------------------------------
-VER='1.0.4'
+VER='1.0.5'
 LOGS_FOLDER='/root/.config/storjshare/logs'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
