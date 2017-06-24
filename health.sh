@@ -90,7 +90,7 @@ if [ -n "$DATA" ]; then
 	LOG_FILE="$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log
 
 # Watchdog restart couns
-if [ ! -f $WATCHDOG_LOG ]; then
+if [ ! -f "$WATCHDOG_LOG" ]; then
 	RESTART_NODE_COUNT=$(echo -e "\e[0;32mNo log file\e[0m")
 else
 	RESTART_NODE_COUNT=$(grep "$WATCHDOG_LOG_DATE" "$WATCHDOG_LOG" | grep 'RESTARTED' | grep -c "$line")
