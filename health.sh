@@ -179,18 +179,18 @@ if [ -z $UPLOAD_COUNT ]; then
 fi
 
 #--------------------------------------------------------------------------------------------
-if [ $TR == 0 ]; then
+if [ "$TR" == 0 ]; then
     TR_STATUS=$(echo -e "\e[0;32mgood\e[0m")
 else
     TR_STATUS=$(echo -e "\e[0;31mbad /" $ERR3 "\e[0m")
 fi
 
 
-if [ $PORT_STATUS == "open" ]; then
+if [ "$PORT_STATUS" == "open" ]; then
     PORT_STATUS=$(echo -e "\e[0;32mopen\e[0m")
-elif [ $PORT_STATUS == "closed" ]; then
+elif [ "$PORT_STATUS" == "closed" ]; then
     PORT_STATUS=$(echo -e "\e[0;31mclosed\e[0m")
-elif [ $PORT_STATUS == "filtered" ]; then
+elif [ "$PORT_STATUS" == "filtered" ]; then
     PORT_STATUS=$(echo -e "\e[0;33mfiltered\e[0m")
 else
     PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
