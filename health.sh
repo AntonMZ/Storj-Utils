@@ -34,11 +34,13 @@ fi
 
 function help(){
     echo -e " \n" \
+    "Version 1.0.5\n" \
+    "\n" \
     "Github Storj Project - https://github.com/Storj/storjshare-daemon\n"\
     "Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils\n"\
     " \n" \
-    "--cli - enable cli mode script for console \n" \
-    "--api - enable appi mode script for send data in monitoring site\n" \
+    "--cli - enable cli mode (ex: sh health.sh --cli)\n" \
+    "--api - enable api mode (ex: sh health.sh --api)\n" \
     ""
 }
 
