@@ -13,21 +13,23 @@
 #------------------------------------------------------------------------------
 
 # check if jq is installed
-if [ -z "hash jq 2>/dev/null" ]; then
+if ! hash jq 2>/dev/null; then
   echo "Please install jq first, more info about jq @ https://stedolan.github.io/jq/"
   exit 0
 fi
 
 # check nvm env & storjshare
-if [ -z "hash storjshare 2>/dev/null" ]; then
+if ! hash storjshare 2>/dev/null; then
   echo "Please install storjshare or enable nvm env"
   exit 0
 fi
 
 #check netstat for linux-gnu
-if [ -z "hash netstat 2>/dev/null" ]; then
-  echo "Please install net-tools packet"
-  exit 0
+if [ "$OSTYPE" == "linux-gnu" ]; then
+  if ! hash netstat 2>/dev/null; then
+    echo "Please install net-tools packet"
+    exit 0
+  fi
 fi
 
 function help(){
@@ -105,16 +107,48 @@ if [ -n "$DATA" ]; then
   do
 	CURL=$(curl -s https://api.storj.io/contacts/"$line")
 	ADDRESS=$(echo "$CURL" | jq -r '.address')
-	LS=$(echo "$CURL" | jq -r '.lastSeen')
-	RT=$(echo "$CURL" | jq '.responseTime' | awk -F '.' '{print $1}')
-	AGENT=$(echo "$CURL" | jq -r '.userAgent')
-	PORT=$(echo "$CURL" | jq -r '.port')
-	PROTOCOL=$(echo "$CURL" | jq -r '.protocol')
-	LT=$(echo "$CURL" | jq -r '.lastTimeout')
-	TR=$(echo "$CURL" | jq -r '.timeoutRate')
+  if [ "$ADDRESS" == null ];then
+    ADDRESS=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+  fi
+
+  LS=$(echo "$CURL" | jq -r '.lastSeen')
+  if [ "$LS" == null ];then
+    LS=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+  fi
+
+  RT=$(echo "$CURL" | jq '.responseTime' | awk -F '.' '{print $1}')
+  if [ "$RT" == null ];then
+    RT=$(echo 0)
+  fi
+
+  AGENT=$(echo "$CURL" | jq -r '.userAgent')
+  if [ "$AGENT" == null ];then
+    AGENT=$(echo "API Server does not contain a parameter\e[0m")
+  fi
+
+  PORT=$(echo "$CURL" | jq -r '.port')
+  if [ "$PORT" == null ];then
+    PORT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+  fi
+
+  PROTOCOL=$(echo "$CURL" | jq -r '.protocol')
+  if [ "$PROTOCOL" == null ];then
+    PROTOCOL=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+  fi
+
+  LT=$(echo "$CURL" | jq -r '.lastTimeout')
+  if [ "$LT" == null ];then
+    LT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+  fi
+
+  TR=$(echo "$CURL" | jq -r '.timeoutRate')
+  if [ "$TR" == null ];then
+    TR=$(echo "err")
+  fi
+
 	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
 	LOG_FILE="$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log
-	DELTA=$(grep -R 'delta' $LOG_FILE | tail -1 | awk -F ',' '{print $3}' | awk -F ' ' '{print $2}')
+	DELTA=$(grep -R 'delta' "$LOG_FILE" | tail -1 | awk -F ',' '{print $3}' | awk -F ' ' '{print $2}')
 
 # Watchdog restart couns
 if [ ! -f $WATCHDOG_LOG ]; then
@@ -131,18 +165,18 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Share allocated
-SHARE_ALLOCATED_TMP=$(cat < $LOG_FILE | grep storageAllocated | tail -1 | awk -F ':' '{print $6}' | awk -F ',' '{print $1}')
+SHARE_ALLOCATED_TMP=$(cat < "$LOG_FILE" | grep storageAllocated | tail -1 | awk -F ':' '{print $6}' | awk -F ',' '{print $1}')
 let SHARE_ALLOCATED=$SHARE_ALLOCATED_TMP/1024/1024/1024
 
 #
 #--------------------------------------------------------------------------------------------
 # Share_used
-SHARE_USED_TMP=$(cat < $LOG_FILE | grep storageUsed | tail -1 | awk -F ':' '{print $7}' | awk -F ',' '{print $1}')
+SHARE_USED_TMP=$(cat < "$LOG_FILE" | grep storageUsed | tail -1 | awk -F ':' '{print $7}' | awk -F ',' '{print $1}')
 let SHARE_USED=$SHARE_USED_TMP/1024/1024/1024
 
 #--------------------------------------------------------------------------------------------
 # Last publish
-LAST_PUBLISH=$(grep -R 'PUBLISH' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_PUBLISH=$(grep -R 'PUBLISH' "$LOG_FILE" | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_PUBLISH" ]; then
 	LAST_PUBLISH=$(echo '-')
@@ -150,14 +184,14 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Publish counts
-PUBLISH_COUNT=$(grep -cR 'PUBLISH' $LOG_FILE)
+PUBLISH_COUNT=$(grep -cR 'PUBLISH' "$LOG_FILE")
 if [ -z "$PUBLISH_COUNT" ]; then
 	PUBLISH_COUNT=$(echo '-')
 fi
 
 #--------------------------------------------------------------------------------------------
 # Last offer
-LAST_OFFER=$(grep -R 'OFFER' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_OFFER=$(grep -R 'OFFER' "$LOG_FILE" | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_OFFER" ]; then
 	LAST_OFFER=$(echo '-')
@@ -165,7 +199,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Offers counts
-OFFER_COUNT=$(grep -cR 'OFFER' $LOG_FILE)
+OFFER_COUNT=$(grep -cR 'OFFER' "$LOG_FILE")
 
 if [ -z "$OFFER_COUNT" ]; then
 	OFFER_COUNT=$(echo '-')
@@ -173,7 +207,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Last consigned
-LAST_CONSIGNMENT=$(grep -R 'consignment' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_CONSIGNMENT=$(grep -R 'consignment' "$LOG_FILE" | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_CONSIGNMENT" ]; then
 	LAST_CONSIGNMENT=$(echo '-')
@@ -181,7 +215,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Consigned counts
-CONSIGNMENT_COUNT=$(grep -cR 'consignment' $LOG_FILE)
+CONSIGNMENT_COUNT=$(grep -cR 'consignment' "$LOG_FILE")
 
 if [ -z "$CONSIGNMENT_COUNT" ]; then
 	CONSIGNMENT_COUNT=$(echo '-')
@@ -190,21 +224,21 @@ fi
 #--------------------------------------------------------------------------------------------
 # Last download
 #
-LAST_DOWNLOAD=$(grep -R 'download' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_DOWNLOAD=$(grep -R 'download' "$LOG_FILE" | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 if [ -z "$LAST_DOWNLOAD" ]; then
 	LAST_DOWNLOAD=$(echo '-')
 fi
 
 #--------------------------------------------------------------------------------------------
 # Download counts
-DOWNLOAD_COUNT=$(grep -cR 'download' $LOG_FILE)
+DOWNLOAD_COUNT=$(grep -cR 'download' "$LOG_FILE")
 if [ -z "$DOWNLOAD_COUNT" ]; then
 	DOWNLOAD_COUNT=$(echo '-')
 fi
 
 #--------------------------------------------------------------------------------------------
 # Last upload
-LAST_UPLOAD=$(grep -R 'upload' $LOG_FILE | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
+LAST_UPLOAD=$(grep -R 'upload' "$LOG_FILE" | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
 
 if [ -z "$LAST_UPLOAD" ]; then
 	LAST_UPLOAD=$(echo '-')
@@ -212,7 +246,7 @@ fi
 
 #--------------------------------------------------------------------------------------------
 # Upload counts
-UPLOAD_COUNT=$(grep -cR 'upload' $LOG_FILE)
+UPLOAD_COUNT=$(grep -cR 'upload' "$LOG_FILE")
 
 if [ -z "$UPLOAD_COUNT" ]; then
 	UPLOAD_COUNT=$(echo '-')
@@ -221,6 +255,8 @@ fi
 #--------------------------------------------------------------------------------------------
 if [ "$TR" == 0 ]; then
     TR_STATUS=$(echo -e "\e[0;32mgood\e[0m")
+elif [ "$TR" == err ]; then
+    TR_STATUS=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
 else
     TR_STATUS=$(echo -e "\e[0;31mbad / $ERR3 \e[0m")
 fi
@@ -261,7 +297,7 @@ if [ "$1" == --cli ];then
 {
 echo -e " NodeID:^ $line \n" \
 	"Restarts Node:^ $RESTART_NODE_COUNT \n" \
-	"Log_file:^ $LOG_FILE \n" \
+	"Log_file:^ "$LOG_FILE" \n" \
 	"ResponseTime:^ $RT \n" \
 	"Address:^ $ADDRESS \n" \
 	"User Agent:^ $AGENT \n" \
@@ -292,7 +328,7 @@ if [ "$1" == --api ];then
 {
   $line
   $RESTART_NODE_COUNT
-	$LOG_FILE
+	"$LOG_FILE"
 	$RT
 	$ADDRESS
 	$AGENT
