@@ -1,3 +1,5 @@
+Current Version 1.0.4
+
 # Storj-Utils
 
 Скрипт проверки основных параметров работы нод Storjshare-Cli для Linux.<br/>
