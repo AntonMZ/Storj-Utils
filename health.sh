@@ -32,7 +32,7 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
   fi
 fi
 
-function help(){
+function help{
     echo -e " \n" \
     "Version 1.0.5\n" \
     "\n" \
