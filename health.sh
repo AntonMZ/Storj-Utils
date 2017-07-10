@@ -12,6 +12,16 @@
 # Prechecks
 #------------------------------------------------------------------------------
 
+
+
+SHELL=$(echo $SHELL | grep bash)
+if [ -z $SHELL ];
+then
+  echo 'Please use only bash'
+  exit 0
+fi
+
+
 # check if jq is installed
 if ! hash jq 2>/dev/null; then
   echo "Please install jq first, more info about jq @ https://stedolan.github.io/jq/"
@@ -32,20 +42,23 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
   fi
 fi
 
-function help
+function help()
 {
     echo -e " \n" \
     "Version 1.0.5\n" \
     "\n" \
     "Github Storj Project - https://github.com/Storj/storjshare-daemon\n"\
     "Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils\n"\
+
+    "Usage: healt.sh [options]\n" \
     " \n" \
+    "Options:\n" \
     "--cli - enable cli mode (ex: sh health.sh --cli)\n" \
     "--api - enable api mode (ex: sh health.sh --api)\n" \
     ""
 }
 
-if [ "$1" == '' ]; then
+if [ "$1" != "--cli" ] || [ "$1" != "--api" ]; then
   help
   exit 0
 fi
@@ -59,12 +72,13 @@ YEAR=$(date +%Y)
 MONTH=$(date +%-m)
 DAY=$(date +%-d)
 DATE=$(date)
+UPTIME=$(date +%s)
 WATCHDOG_LOG='/var/log/storjshare-daemon-status.log'
 
 if [ "$OSTYPE" == "linux-gnu" ]; then
   IP=$(hostname -I)
 	SESSIONS=$(netstat -np | grep node | grep -c tcp)
-elif [[ "$OSTYPE" == "freebsd"* ]]; then
+elif [ "$OSTYPE" == "freebsd"* ]; then
   IP=$(ifconfig | grep "inet " | grep -v "inet6"  | grep -v "127.0.0.1" | awk '{print $2}' | tr '\n' ' ')
 	SS_PID=$(pgrep -f "farmer")
 	SESSIONS=$(sockstat -c | grep -v "stream" | grep -c " $SS_PID " | awk '{print $1}')
@@ -329,32 +343,33 @@ fi
 
 if [ "$1" == --api ];then
 {
-  $line
-  $RESTART_NODE_COUNT
-	"$LOG_FILE"
-	$RT
-	$ADDRESS
-	$AGENT
-	$LS
-	$PORT
-  $PORT_STATUS
-	$PROTOCOL
-	$LT
-	$TR
-  $TR_STATUS
-	$DELTA $DELTASTATUS
-	$SHARE_ALLOCATED
-	$SHARE_USED
-	$LAST_PUBLISH
-	$LAST_OFFER
-	$LAST_CONSIGNMENT
-	$LAST_DOWNLOAD
-	$LAST_UPLOAD
-	$OFFER_COUNT
-	$PUBLISH_COUNT
-	$DOWNLOAD_COUNT
-	$UPLOAD_COUNT
-	$CONSIGNMENT_COUNT
+curl -X POST \
+-F "node_id=$line" \
+-F "address=$ADDRESS" \
+-F "uptime=$UPTIME" \
+-F "agent=$AGENT" \
+-F "port=$PORT" \
+-F "rt=$RT" \
+-F "port_status=$PORT_STATUS" \
+-F "share_allocated=$SHARE_ALLOCATED" \
+-F "ls=$LS" \
+-F "protocol=$PROTOCOL" \
+-F "lt=$LT" \
+-F "tr=$TR" \
+-F "tr_status=$TR_STATUS" \
+-F "delta=$DELTA" \
+-F "share_used=$SHARE_USED" \
+-F "last_publish=$LAST_PUBLISH" \
+-F "last_offer=$LAST_OFFER" \
+-F "last_consignment=$LAST_CONSIGNMENT" \
+-F "last_download=$LAST_DOWNLOAD" \
+-F "last_upload=$LAST_UPLOAD" \
+-F "offer_count=$OFFER_COUNT" \
+-F "publish_count=$PUBLISH_COUNT" \
+-F "download_count=$DOWNLOAD_COUNT" \
+-F "upload_count=$UPLOAD_COUNT" \
+-F "consignment_count=$CONSIGNMENT_COUNT" \
+-F "restart_count=$RESTART_NODE_COUNT" https://api.storj.maxrival.com 
 }
 fi
 
