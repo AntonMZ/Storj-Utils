@@ -163,7 +163,7 @@ if [ -n "$DATA" ]; then
     TR=$(echo "err")
   fi
 
-	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
+	PORT_STATUS=$(curl --silent -k "https://storjstat.com:3000/portstatus?hostname=$ADDRESS&port=$PORT" | jq -r '.status')
 	LOG_FILE="$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log
 	DELTA=$(grep -R 'delta' "$LOG_FILE" | tail -1 | awk -F ',' '{print $3}' | awk -F ' ' '{print $2}')
 
