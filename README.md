@@ -1,4 +1,6 @@
-Current Version 1.0.4
+###Compatible with Stat Stoj Statistics (https://stat.storj.maxrival.com)
+
+Current Version 1.0.5
 
 # Storj-Utils
 
