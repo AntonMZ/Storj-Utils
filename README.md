@@ -1,4 +1,4 @@
-###Compatible with Stat Stoj Statistics (https://stat.storj.maxrival.com)
+**Compatible with Stat Storj Statistics (https://stat.storj.maxrival.com)**
 
 Current Version 1.0.5
 
