@@ -241,7 +241,7 @@ do
         fi
       fi
 
-    	PORT_STATUS=$(curl -s "http://storj.api.maxrival.com:8000/v1/?port=$PORT&ip=$ADDRESS")
+    	PORT_STATUS=$(curl --silent -k "https://storjstat.com:3000/portstatus?hostname=$ADDRESS&port=$PORT" | jq -r '.status')
     	LOG_FILE="$LOGS_FOLDER"/"$line""_""$YEAR-$MONTH-$DAY".log
 
       # Watchdog restart couns
@@ -392,35 +392,9 @@ do
       fi
 
       if [ "$PORT_STATUS" == 'open' ]; then
-        if [ "$1" == --api ]; then
-          PORT_STATUS="0"
-        else
           PORT_STATUS=$(echo -e "\e[0;32mopen\e[0m")
-        fi
       elif [ "$PORT_STATUS" == 'closed' ]; then
-        if [ "$1" == --api ]; then
-          PORT_STATUS="1"
-        else
           PORT_STATUS=$(echo -e "\e[0;31mclosed\e[0m")
-        fi
-      elif [ "$PORT_STATUS" == 'filtered' ]; then
-        if [ "$1" == --api ]; then
-          PORT_STATUS="2"
-        else
-          PORT_STATUS=$(echo -e "\e[0;33mfiltered\e[0m")
-        fi
-      elif [ "$PORT_STATUS" == 'wrong parameters' ]; then
-        if [ "$1" == --api ]; then
-          PORT_STATUS="3"
-        else
-          PORT_STATUS=$(echo -e "\e[0;31mwrong parametrs\e[0m")
-        fi
-      else
-        if [ "$1" == --api ]; then
-          PORT_STATUS="4"
-        else
-          PORT_STATUS=$(echo -e "\e[0;33mapi / Server not available \e[0m")
-        fi
       fi
 
       if [ "$DELTA" == '>9999' ];then
@@ -492,7 +466,6 @@ do
         -F "agent=$AGENT" \
         -F "port=$PORT" \
         -F "rt=$RT" \
-        -F "port_status=$PORT_STATUS" \
         -F "share_allocated=$SHARE_ALLOCATED" \
         -F "ls=$LS" \
         -F "lt=$LT" \
