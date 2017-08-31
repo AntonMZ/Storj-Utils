@@ -1,4 +1,5 @@
 **Compatible with Stat Storj Statistics (https://stat.storj.maxrival.com)**
+
 **Compatible with storjshare daemon: 4.0.1, core: 7.0.0, protocol: 1.2.0**
 
 
