@@ -120,7 +120,7 @@ if [ "$1" == --cli ];then
 }
 fi
 
-DATA_TMP=$(storjshare status --json | sed 's/{/{"/' | sed 's/}/"}/' | sed 's/:/":"/g' | sed '/sharedPercent/!s/,/","/g' | tr -d "'" | tr -d ' ' | tr -d '\n')
+DATA_TMP=$(storjshare status --json)
 lenght=$(echo "$DATA_TMP" | jq '.|length')
 
 if [ -n "$DATA_TMP" ]; then
