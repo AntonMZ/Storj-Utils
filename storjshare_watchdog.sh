@@ -45,6 +45,14 @@ then
     done
 fi
 
+STATUS_DAEMON=$(ps aux | grep '[s]torjshare-daemon.js')
+if [ "STATUS_DEMON" != true ]; then
+    curl https://api.telegram.org/bot$API_KEY/sendMessage\?chat_id\=$CHAT_ID\&text\=Daemon%20restarted%20on%20server%20$IP > /dev/null 2>&1
+    echo "["$DATE"] daemon RESTARTED"  >> /var/log/storjshare-daemon-status.log
+    storjshare daemon
+fi
+
+
 # -----------------------------------------------------------------------------------------
 # Example
 # -----------------------------------------------------------------------------------------
