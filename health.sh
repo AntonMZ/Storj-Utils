@@ -34,6 +34,12 @@ if ! hash bc 2>/dev/null; then
   exit 0
 fi
 
+# check if curl is installed
+if ! hash curl 2>/dev/null; then
+  echo "Please install curl"
+  exit 0
+fi
+
 
 # check nvm env & storjshare
 if ! hash storjshare 2>/dev/null; then
@@ -120,7 +126,7 @@ if [ "$1" == --cli ];then
 }
 fi
 
-DATA_TMP=$(storjshare status --json | sed 's/{/{"/' | sed 's/}/"}/' | sed 's/:/":"/g' | sed '/sharedPercent/!s/,/","/g' | tr -d "'" | tr -d ' ' | tr -d '\n')
+DATA_TMP=$(storjshare status --json)
 lenght=$(echo "$DATA_TMP" | jq '.|length')
 
 if [ -n "$DATA_TMP" ]; then
@@ -270,10 +276,12 @@ do
           SHARE_ALLOCATED=$(echo 'no data')
         fi
       else
+        B=$(echo "$SHARE_ALLOCATED_TMP" | grep B)
         KB=$(echo "$SHARE_ALLOCATED_TMP" | grep KB)
         MB=$(echo "$SHARE_ALLOCATED_TMP" | grep MB)
         GB=$(echo "$SHARE_ALLOCATED_TMP" | grep GB)
         TB=$(echo "$SHARE_ALLOCATED_TMP" | grep TB)
+
         if [ -n "$KB" ];then
           SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'KB')
           SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024 | bc | awk -F '.' '{print $1}')
@@ -286,6 +294,8 @@ do
         elif [ -n "$TB" ];then
           SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'TB')
           SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024*1024*1024*1024 | bc | awk -F '.' '{print $1}')
+        elif [ -n "$B" ];then
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'B')
         else
           SHARE_USED=$(echo '-')
         fi
@@ -300,10 +310,12 @@ do
           SHARE_USED=$(echo 'no data')
         fi
       else
+        B=$(echo "$SHARE_USED_TMP" | grep B)
         KB=$(echo "$SHARE_USED_TMP" | grep KB)
         MB=$(echo "$SHARE_USED_TMP" | grep MB)
         GB=$(echo "$SHARE_USED_TMP" | grep GB)
         TB=$(echo "$SHARE_USED_TMP" | grep TB)
+
         if [ -n "$KB" ];then
           SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'KB' )
           SHARE_USED=$(echo "$SHARE_USED"*1024 | bc | awk -F '.' '{print $1}')
@@ -316,6 +328,8 @@ do
         elif [ -n "$TB" ];then
           SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'TB' )
           SHARE_USED=$(echo "$SHARE_USED"*1024*1024*1024*1024 | bc | awk -F '.' '{print $1}')
+        elif [ -n "$B" ];then
+            SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'B')
         else
           SHARE_USED=$(echo '0')
         fi
