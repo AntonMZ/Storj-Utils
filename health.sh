@@ -2,7 +2,7 @@
 
 #
 # Script By Anton Zheltyshev
-# Version 1.0.6
+# Version 1.0.7
 # Contacts info@maxrival.com
 #
 # Github Storj Project - https://github.com/Storj/storjshare-daemon
@@ -57,7 +57,7 @@ fi
 function help()
 {
     echo -e " \n" \
-    "Version 1.0.6\n" \
+    "Version 1.0.7\n" \
     "\n" \
     "Github Storj Project - https://github.com/Storj/storjshare-daemon\n"\
     "Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils\n"\
@@ -82,7 +82,7 @@ LOGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep LOGS_FOLDER | tr -d 'LOGS_
 CONFIGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep CONFIGS_FOLDER | tr -d 'CONFIGS_FOLDER=')
 WATCHDOG_LOG=$(cat "$CURRENT_FOLDER"/config.cfg | grep WATCHDOG_LOG | tr -d 'WATCHDOG_LOG=')
 EMAIL=$(cat "$CURRENT_FOLDER"/config.cfg | grep EMAIL | tr -d 'EMAIL=')
-VER='1.0.6'
+VER='1.0.7'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
 MONTH=$(date +%-m)
