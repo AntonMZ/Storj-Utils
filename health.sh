@@ -40,7 +40,6 @@ if ! hash curl 2>/dev/null; then
   exit 0
 fi
 
-
 # check nvm env & storjshare
 if ! hash storjshare 2>/dev/null; then
   echo "Please install storjshare or enable nvm env"
@@ -148,7 +147,8 @@ do
     DELTA=$(echo "$DATA_TMP" | jq -r ".[$i].delta" | tr -d 'ms')
     PORT=$(echo "$DATA_TMP" | jq -r ".[$i].port")
     SHARE_USED_TMP=$(echo "$DATA_TMP" | jq -r ".[$i].shared")
-    SHAREDPERCENT=$(echo "$DATA_TMP" | jq -r ".[$i].sharedPercent")
+    SHARED_PERCENT=$(echo "$DATA_TMP" | jq -r ".[$i].sharedPercent")
+    BRIDGE_STATUS=$(echo "$DATA_TMP" | jq -r ".[$i].bridgeConnectionStatus")
 
     for line in $ID
     do
@@ -174,6 +174,20 @@ do
           else
             STATUS=$(echo -e "\e[0;31mNode stopped\e[0m")
           fi
+      fi
+
+      if [ "$BRIDGE_STATUS" == connected ]; then
+        if [ "$1" == --api ]; then
+          BRIDGE_STATUS=1
+        else
+          BRIDGE_STATUS=$(echo -e "\e[0;32mBridge connected\e[0m")
+        fi
+      else
+        if [ "$1" == --api ]; then
+          BRIDGE_STATUS=0
+        else
+          BRIDGE_STATUS=$(echo -e "\e[0;31mBridge not connected\e[0m")
+        fi
       fi
 
       LS=$(echo "$CURL" | jq -r '.lastSeen')
@@ -441,6 +455,7 @@ do
       {
       echo -e " NodeID:^ $line \n" \
       	"Status:^ $STATUS \n" \
+        "Bridge status:^ $BRIDGE_STATUS \n" \
       	"Restarts Count:^ $RESTARTS \n" \
       	"Log_file:^ $LOG_FILE \n" \
       	"ResponseTime:^ $RT \n" \
@@ -453,8 +468,9 @@ do
         "Last Timeout:^ $LT \n" \
       	"Timeout Rate:^ $TR / $TR_STATUS \n" \
       	"DeltaTime:^ $DELTA $DELTASTATUS \n" \
-      	"Share_allocated:^ $SHARE_ALLOCATED GB (telemetry report)\n" \
-      	"Share_Used:^ $SHARE_USED GB (telemetry report)\n" \
+      	"Share_allocated:^ $SHARE_ALLOCATED GB\n" \
+      	"Share_Used:^ $SHARE_USED GB\n" \
+        "Share_Percent:^ $SHARED_PERCENT \n" \
       	"Last publish:^ $LAST_PUBLISH \n" \
       	"Last offer:^ $LAST_OFFER \n" \
       	"Last consigned:^ $LAST_CONSIGNMENT \n" \
@@ -482,6 +498,7 @@ do
         -F "rt=$RT" \
         -F "share_allocated=$SHARE_ALLOCATED" \
         -F "ls=$LS" \
+        -F "protocol=$PROTOCOL" \
         -F "lt=$LT" \
         -F "tr=$TR" \
         -F "tr_status=$TR_STATUS" \
@@ -499,6 +516,9 @@ do
         -F "consignment_count=$CONSIGNMENT_COUNT" \
         -F "peers=$PEERS" \
         -F "status=$STATUS" \
+        -F "bridge_status=$BRIDGE_STATUS" \
+        -F "ver=$VER" \
+        -F "shared_percent=$SHARED_PERCENT" \
         -F "restarts=$RESTARTS" https://api.storj.maxrival.com
       fi
     done
