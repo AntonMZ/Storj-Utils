@@ -178,15 +178,27 @@ do
 
       if [ "$BRIDGE_STATUS" == connected ]; then
         if [ "$1" == --api ]; then
-          BRIDGE_STATUS=1
+          BRIDGE_STATUS=3
         else
           BRIDGE_STATUS=$(echo -e "\e[0;32mBridge connected\e[0m")
         fi
-      else
+      elif [ "$BRIDGE_STATUS" == confirming ]; then
+        if [ "$1" == --api ]; then
+          BRIDGE_STATUS=2
+        else
+          BRIDGE_STATUS=$(echo -e "\e[0;33mBridge confirming\e[0m")
+        fi
+      elif [ "$BRIDGE_STATUS" == connecting ]; then
+        if [ "$1" == --api ]; then
+          BRIDGE_STATUS=1
+        else
+          BRIDGE_STATUS=$(echo -e "\e[0;33mBridge connecting\e[0m")
+        fi
+      else [ "$BRIDGE_STATUS" == disconnected ];
         if [ "$1" == --api ]; then
           BRIDGE_STATUS=0
         else
-          BRIDGE_STATUS=$(echo -e "\e[0;31mBridge not connected\e[0m")
+          BRIDGE_STATUS=$(echo -e "\e[0;31mBridge disconnected\e[0m")
         fi
       fi
 
