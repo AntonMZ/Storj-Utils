@@ -143,7 +143,7 @@ do
     UPTIME=$(echo "$DATA_TMP" | jq -r ".[$i].uptime")
     PEERS=$(echo "$DATA_TMP" | jq -r ".[$i].peers")
     OFFERS=$(echo "$DATA_TMP" | jq -r ".[$i].offers")
-    DATARECEIVEDCOUNT=$(echo "$DATA_TMP" | jq -r ".[$i].dataReceivedCount")
+    DRC=$(echo "$DATA_TMP" | jq -r ".[$i].dataReceivedCount")
     DELTA=$(echo "$DATA_TMP" | jq -r ".[$i].delta" | tr -d 'ms')
     PORT=$(echo "$DATA_TMP" | jq -r ".[$i].port")
     SHARE_USED_TMP=$(echo "$DATA_TMP" | jq -r ".[$i].shared")
@@ -490,6 +490,7 @@ do
       	"Last upload:^ $LAST_UPLOAD \n" \
       	"Offers:^ $OFFERS \n" \
         "Peers:^ $PEERS \n" \
+        "DataReceivedCount^ $DRC \n" \
       	"Publish counts:^ $PUBLISH_COUNT \n" \
       	"Download counts:^ $DOWNLOAD_COUNT \n" \
       	"Upload counts:^ $UPLOAD_COUNT \n" \
@@ -531,6 +532,7 @@ do
         -F "bridge_status=$BRIDGE_STATUS" \
         -F "ver=$VER" \
         -F "shared_percent=$SHARED_PERCENT" \
+        -F "drc=$DRC" \
         -F "restarts=$RESTARTS" https://api.storj.maxrival.com
       fi
     done
