@@ -513,7 +513,7 @@ do
         -F "protocol=$PROTOCOL" \
         -F "lt=$LT" \
         -F "tr=$TR" \
-        -F "tr_status=$TR_STATUS" \
+        -F "os=1" \
         -F "delta=$DELTA" \
         -F "share_used=$SHARE_USED" \
         -F "last_publish=$LAST_PUBLISH" \
