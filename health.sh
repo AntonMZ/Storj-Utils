@@ -110,6 +110,13 @@ fi
 
 if [ "$1" == --cli ];then
 {
+  echo -e "   _____  _                _    _____       _  _           "
+  echo -e "  |   __|| |_  ___  ___   |_|  |     | ___ | ||_| ___  ___ "
+  echo -e "  |__   ||  _|| . ||  _|  | |  |  |  ||   || || ||   || -_|"
+  echo -e "  |_____||_|  |___||_|   _| |  |_____||_|_||_||_||_|_||___|"
+  echo -e "                        |___|                              "
+
+  echo -e " **********************************************************"
   echo -e " Version script:^ \e[0;32m $VER \e[0m \n" \
   "Hostname:^ \e[0;32m $HOSTNAME \e[0m \n" \
   "Ip:^ \e[0;32m $IP \e[0m \n" \
@@ -276,9 +283,9 @@ do
         fi
       else
         if [ "$TR" == 0 ];then
-          TR_STATUS=$(echo -e "\e[0;32mgood\e[0m")
+          TR_STATUS=$(echo -e "\e[0;32mGood\e[0m")
         else
-          TR_STATUS=$(echo -e "\e[0;31mbad / Is not null \e[0m")
+          TR_STATUS=$(echo -e "\e[0;31mBad - Is not null \e[0m")
         fi
       fi
 
@@ -448,24 +455,24 @@ do
 
       if [ "$DELTA" == '>9999' ];then
         DELTA=9999
-        DELTASTATUS=$(echo -e "/ \e[0;31mbad / Your clock is not synced with a time server\e[0m")
+        DELTASTATUS=$(echo -e "/ \e[0;31mBad - Your clock is not synced with a time server\e[0m")
       elif [ "$DELTA" == '...' ];then
         DELTA="..."
         DELTASTATUS=$(echo -e /"\e[0;33m No data\e[0m")
       elif [ "$DELTA" -ge 500 ] || [ "$DELTA" -le -500 ]; then
-        DELTASTATUS=$(echo -e "/ \e[0;31mbad / Your clock is not synced with a time server\e[0m")
+        DELTASTATUS=$(echo -e "/ \e[0;31mBad - Your clock is not synced with a time server\e[0m")
       elif [ "$DELTA" -ge 50 ] || [ "$DELTA" -le -50 ]; then
-        DELTASTATUS=$(echo -e "/ \e[0;33mmedium / Your clock is not synced with a time server\e[0m")
+        DELTASTATUS=$(echo -e "/ \e[0;33mMedium - Your clock is not synced with a time server\e[0m")
       else
-        DELTASTATUS=$(echo -e "/ \e[0;32mgood / Your clock is synced with a time server \e[0m")
+        DELTASTATUS=$(echo -e "/ \e[0;32mGood - Your clock is synced with a time server \e[0m")
       fi
 
       if [ "$1" == --cli ];then
         if [ "$RT" != err ];then
           if [ "$RT" -ge "$RTMAX" ]; then
-            RT=$(echo -e "$RT / \e[0;31mbad\e[0m")
+            RT=$(echo -e "$RT / \e[0;31mBad\e[0m")
           else
-            RT=$(echo -e "$RT / \e[0;32mgood\e[0m")
+            RT=$(echo -e "$RT / \e[0;32mGood\e[0m")
           fi
         else
           RT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
