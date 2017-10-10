@@ -2,7 +2,6 @@
 
 #
 # Script By Anton Zheltyshev
-# Version 1.0.9
 # Contacts info@maxrival.com
 #
 # Github Storj Project - https://github.com/Storj/storjshare-daemon
@@ -11,16 +10,12 @@
 
 # Prechecks
 #------------------------------------------------------------------------------
-
-
-
 #SHELL=$(echo $SHELL | grep bash)
 #if [ -z $SHELL ];
 #then
 #  echo 'Please use only bash'
 #  exit 0
 #fi
-
 
 # check if jq is installed
 if ! hash jq 2>/dev/null; then
@@ -54,22 +49,6 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
   fi
 fi
 
-function help()
-{
-    echo -e " \n" \
-    "Version 1.0.9\n" \
-    "\n" \
-    "Github Storj Project - https://github.com/Storj/storjshare-daemon\n"\
-    "Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils\n"\
-    " \n" \
-    "Usage: healt.sh [options]\n" \
-    " \n" \
-    "Options:\n" \
-    "--cli - enable cli mode (ex: sh health.sh --cli)\n" \
-    "--api - enable api mode (ex: sh health.sh --api)\n" \
-    ""
-}
-
 #if [ "$1" != "--cli" ] || [ "$1" != "--api" ]; then
 #  help
 #  exit 0
@@ -89,7 +68,28 @@ MONTH=$(date +%-m)
 DAY=$(date +%-d)
 DATE=$(date)
 LOCALTIME=$(date +%s)
-
+WATCHDOG_LOG_DATE=$(date +%x)
+STORJ=$(storjshare -V)
+RTMAX='1000'
+DATA_TMP=$(storjshare status --json)
+lenght=$(echo "$DATA_TMP" | jq '.|length')
+#------------------------------------------------------------------------------
+function help()
+{
+    echo -e " \n" \
+    "Version $VER\n" \
+    "\n" \
+    "Github Storj Project - https://github.com/Storj/storjshare-daemon\n"\
+    "Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils\n"\
+    " \n" \
+    "Usage: healt.sh [options]\n" \
+    " \n" \
+    "Options:\n" \
+    "--cli - enable cli mode (ex: sh health.sh --cli)\n" \
+    "--api - enable api mode (ex: sh health.sh --api)\n" \
+    ""
+}
+#------------------------------------------------------------------------------
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   IP=$(hostname -I)
 	SESSIONS=$(netstat -np | grep node | grep -c tcp)
@@ -101,12 +101,6 @@ else
 	IP="n/a for $OSTYPE"
 	SESSIONS="n/a for $OSTYPE"
 fi
-
-WATCHDOG_LOG_DATE=$(date +%x)
-STORJ=$(storjshare -V)
-RTMAX='1000'
-
-ERR3='Is not null'
 
 if [ "$1" == --cli ];then
 {
@@ -124,9 +118,6 @@ if [ "$1" == --cli ];then
   "Storjshare Version:^ \e[0;32m $STORJ \e[0m" | column -t -s '^'
 }
 fi
-
-DATA_TMP=$(storjshare status --json)
-lenght=$(echo "$DATA_TMP" | jq '.|length')
 
 if [ -n "$DATA_TMP" ]; then
   if [ "$1" == --cli ];then
@@ -287,7 +278,7 @@ do
         if [ "$TR" == 0 ];then
           TR_STATUS=$(echo -e "\e[0;32mgood\e[0m")
         else
-          TR_STATUS=$(echo -e "\e[0;31mbad / $ERR3 \e[0m")
+          TR_STATUS=$(echo -e "\e[0;31mbad / Is not null \e[0m")
         fi
       fi
 
