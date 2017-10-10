@@ -149,6 +149,7 @@ do
     SHARE_USED_TMP=$(echo "$DATA_TMP" | jq -r ".[$i].shared")
     SHARED_PERCENT=$(echo "$DATA_TMP" | jq -r ".[$i].sharedPercent")
     BRIDGE_STATUS=$(echo "$DATA_TMP" | jq -r ".[$i].bridgeConnectionStatus")
+    LASTCONTRACTSENT=$(echo "$DATA_TMP" | jq -r ".[$i].lastContractSent")
 
     for line in $ID
     do
@@ -494,6 +495,7 @@ do
       	"Publish counts:^ $PUBLISH_COUNT \n" \
       	"Download counts:^ $DOWNLOAD_COUNT \n" \
       	"Upload counts:^ $UPLOAD_COUNT \n" \
+        "Last contract sent:^ $LASTCONTRACTSENT \n" \
       	"Consignment counts:^ $CONSIGNMENT_COUNT \n" | column -t -s '^'
         printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
       }
@@ -533,6 +535,7 @@ do
         -F "ver=$VER" \
         -F "shared_percent=$SHARED_PERCENT" \
         -F "drc=$DRC" \
+        -F "lcs=$LASTCONTRACTSENT" \
         -F "restarts=$RESTARTS" https://api.storj.maxrival.com
       fi
     done
