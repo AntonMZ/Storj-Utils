@@ -149,7 +149,6 @@ do
     SHARE_USED_TMP=$(echo "$DATA_TMP" | jq -r ".[$i].shared")
     SHARED_PERCENT=$(echo "$DATA_TMP" | jq -r ".[$i].sharedPercent")
     BRIDGE_STATUS=$(echo "$DATA_TMP" | jq -r ".[$i].bridgeConnectionStatus")
-    LASTCONTRACTSENT=$(echo "$DATA_TMP" | jq -r ".[$i].lastContractSent")
 
     for line in $ID
     do
@@ -249,6 +248,15 @@ do
       fi
 
       LT=$(echo "$CURL" | jq -r '.lastTimeout')
+      if [ "$LT" == null ];then
+        if [ "$1" == --api ]; then
+          LT="no data"
+        else
+          LT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+        fi
+      fi
+
+      LASTCONTRACTSENT=$(echo "$CURL" | jq -r '.lastContractSent')
       if [ "$LT" == null ];then
         if [ "$1" == --api ]; then
           LT="no data"
