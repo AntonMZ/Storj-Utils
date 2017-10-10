@@ -257,11 +257,20 @@ do
       fi
 
       LASTCONTRACTSENT=$(echo "$CURL" | jq -r '.lastContractSent')
-      if [ "$LT" == null ];then
+      if [ "$LASTCONTRACTSENT" == null ];then
         if [ "$1" == --api ]; then
-          LT="no data"
+          LASTCONTRACTSENT="no data"
         else
-          LT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+          LASTCONTRACTSENT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+        fi
+      fi
+
+      SPACEAVAILABLE=$(echo "$CURL" | jq -r '.spaceAvailable')
+      if [ "$SPACEAVAILABLE" == null ];then
+        if [ "$1" == --api ]; then
+          SPACEAVAILABLE="no data"
+        else
+          SPACEAVAILABLE=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
         fi
       fi
 
@@ -504,6 +513,7 @@ do
       	"Download counts:^ $DOWNLOAD_COUNT \n" \
       	"Upload counts:^ $UPLOAD_COUNT \n" \
         "Last contract sent:^ $LASTCONTRACTSENT \n" \
+        "Space Available:^ $SPACEAVAILABLE \n" \
       	"Consignment counts:^ $CONSIGNMENT_COUNT \n" | column -t -s '^'
         printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
       }
@@ -544,6 +554,7 @@ do
         -F "shared_percent=$SHARED_PERCENT" \
         -F "drc=$DRC" \
         -F "lcs=$LASTCONTRACTSENT" \
+        -F "SpaceAvailable=$SPACEAVAILABLE" \
         -F "restarts=$RESTARTS" https://api.storj.maxrival.com
       fi
     done
