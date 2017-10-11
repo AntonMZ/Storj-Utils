@@ -61,7 +61,7 @@ LOGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep LOGS_FOLDER | tr -d 'LOGS_
 CONFIGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep CONFIGS_FOLDER | tr -d 'CONFIGS_FOLDER=')
 WATCHDOG_LOG=$(cat "$CURRENT_FOLDER"/config.cfg | grep WATCHDOG_LOG | tr -d 'WATCHDOG_LOG=')
 EMAIL=$(cat "$CURRENT_FOLDER"/config.cfg | grep EMAIL | tr -d 'EMAIL=')
-VER='1.0.9'
+VER='b1.1.0'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
 MONTH=$(date +%-m)
