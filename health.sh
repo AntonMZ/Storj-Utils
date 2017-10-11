@@ -1,5 +1,5 @@
 #!/bin/bash
-
+#
 #
 # Script By Anton Zheltyshev
 # Contacts info@maxrival.com
@@ -7,7 +7,7 @@
 # Github Storj Project - https://github.com/Storj/storjshare-daemon
 # Github Storj-Utils - https://github.com/AntonMZ/Storj-Utils
 #
-
+#
 # Prechecks
 #------------------------------------------------------------------------------
 #SHELL=$(echo $SHELL | grep bash)
