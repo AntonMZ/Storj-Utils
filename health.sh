@@ -218,6 +218,15 @@ do
         fi
       fi
 
+      reputation=$(echo "$CURL" | jq -r '.reputation')
+      if [ "$reputation" == null ];then
+        if [ "$1" == --api ]; then
+          reputation="0"
+        else
+          reputation=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
+        fi
+      fi
+
       AGENT=$(echo "$CURL" | jq -r '.userAgent')
       if [ "$AGENT" == null ];then
         if [ "$1" == --api ]; then
@@ -484,7 +493,8 @@ do
       echo -e " NodeID:^ $line \n" \
       	"Status:^ $STATUS \n" \
         "Bridge status:^ $BRIDGE_STATUS \n" \
-      	"Restarts Count:^ $RESTARTS \n" \
+        "Reputation:^ $reputation \n" \
+        "Restarts Count:^ $RESTARTS \n" \
       	"Log_file:^ $LOG_FILE \n" \
       	"ResponseTime:^ $RT \n" \
       	"Address:^ $ADDRESS \n" \
@@ -553,6 +563,7 @@ do
         -F "drc=$DRC" \
         -F "lcs=$LASTCONTRACTSENT" \
         -F "SpaceAvailable=$SPACEAVAILABLE" \
+        -F "reputation=$reputation" \
         -F "restarts=$RESTARTS" https://api.storj.maxrival.com
       fi
     done
