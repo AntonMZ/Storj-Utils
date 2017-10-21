@@ -84,7 +84,7 @@ wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/h
 - [**Port**] - порт ноды<br/>
 Данные берутся с api.storj.io<br/>
 
- При запуску скрипта осуществляется проверка порта на ***открыт/закрыт*** через внешний api ресурс.
+ При запуске скрипта осуществляется проверка порта на ***открыт/закрыт*** через внешний api ресурс.
 
  Cтатусы<br/>
  **open** - порт открыт<br/>
@@ -124,7 +124,7 @@ wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/h
 
 - [**DeltaTime**] - временная дельта<br/>
 Параметр показывает разницу локального времени и времени эталонного NTP сервера.<br/>
-Параметр передается непосредственно бриджем сети.<br/>
+Параметр вычисляет нода сети.<br/>
 
  Cтатусы<br/>
 
@@ -132,6 +132,40 @@ wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/h
  **medium** - значение больше 100 или -100<br/>
  **good** - значение меньше 100 или -100
 
+
+## Режим сбора статистики
+Для использования этого режима необходимо настроить конфигурационный файл [config.cfg](config.cfg) и запустить один раз скрипт от пользователя, под которым будет работать задача периодической отправки статистики на [сайт статистики](https://stat.storj.maxrival.com/):
+1. Клонируйте скрипт в нужную папку
+```
+git clone https://github.com/AntonMZ/Storj-Utils.git
+```
+2. Отредактируйте конфигурационный файл [config.cfg](config.cfg)
+```
+LOGS_FOLDER=/root/.config/storjshare/logs
+CONFIGS_FOLDER=/root/.config/storjshare/configs
+WATCHDOG_LOG=/var/log/storjshare-daemon-status.log
+EMAIL=az@maxrival.com
+```
+где:
+* LOGS_FOLDER – папка с логами StorjShare;
+* CONFIGS_FOLDER – папка с конфигурационными файлами StorjShare;
+* WATCHDOG_LOG – устарело;
+* EMAIL – используется для авторизации на [сайте статистики](https://stat.storj.maxrival.com/).
+3. Запустите скрипт от пользователя, под которым потом будет работать задача в crontab.
+```
+health.sh
+```
+или 
+```
+sudo su -l USER -c "health.sh"
+```
+где USER - пользователь, от которого будет работать crontab. 
+
+4. Создайте задачу в crontab
+```
+crontab -e
+*/5 * * * * /bin/bash /home/storj/scripts/Storj-Utils/health.sh --api > /dev/null 2>&1
+```
 
 <hr>
 Полная инструкция по работе со скриптом на сайте <a href="http://maxrival.com/ispolzovaniie-health-skripta-dlia-provierki-storj-nod/" target="_blank">maxrival.com</a>
