@@ -25,7 +25,7 @@ yum install net-tools.x86_64 -y
 Установка
 
 ```
-wget -O health.sh https://raw.githubusercontent.com/AntonMZ/Storj-Utils/master/health.sh
+git clone https://github.com/AntonMZ/Storj-Utils.git
 ```
 <hr>
 
