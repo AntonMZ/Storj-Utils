@@ -61,7 +61,7 @@ LOGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^LOGS_FOLDER= | sed 's/^LO
 CONFIGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^CONFIGS_FOLDER= | sed 's/^CONFIGS_FOLDER=//')
 WATCHDOG_LOG=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^WATCHDOG_LOG= | sed 's/^WATCHDOG_LOG=//')
 EMAIL=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^EMAIL= | sed 's/^EMAIL=//')
-VER='b1.1.0'
+VER='b1.1.1'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
 MONTH=$(date +%-m)
@@ -355,7 +355,7 @@ do
           fi
         fi
       fi
-      
+
       #
       #--------------------------------------------------------------------------------------------
       # Share_used &  Find KB,MB,GB
