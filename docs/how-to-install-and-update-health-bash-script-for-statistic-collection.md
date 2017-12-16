@@ -38,9 +38,9 @@ WATCHDOG_LOG=/var/log/storjshare-daemon-status.log
 EMAIL=az@maxrival.com
 ```
 
-**LOGS_FOLDER** – checks folder with nodes’ log files.
-**CONFIGS_FOLDER** – checks folder with nodes’ configuration files;
-**WATCHDOG_LOG** – was used for restarts calculation;
+**LOGS_FOLDER** – checks folder with nodes’ log files.<br/>
+**CONFIGS_FOLDER** – checks folder with nodes’ configuration files;<br/>
+**WATCHDOG_LOG** – was used for restarts calculation;<br/>
 **EMAIL** – is used for profile maintaining on the <a href="https://stat.storj.maxrival.com/" target="_blank">statistic’s server</a>.
 
 <font color="blue" size=2>* WATCHDOG_LOG - you may leave unfilled, it will be deprecated soon</font>.
@@ -93,7 +93,7 @@ The first mode is showing statistics without data sending to the statistic serve
 bash health.sh –cli
 ```
 
-<img src="/content/images/2017/10/storjshare_health_script_cli_mode-1.png">
+<img src="https://maxrival.com/content/images/2017/10/storjshare_health_script_cli_mode-1.png">
 
 The second mode is used for sending data to the statistic server:
 
@@ -101,7 +101,7 @@ The second mode is used for sending data to the statistic server:
 bash health.sh –api
 ```
 
-<img src="/content/images/2017/10/storjshare_health_script_api_mode.png">
+<img src="https://maxrival.com/content/images/2017/10/storjshare_health_script_api_mode.png">
 
 <hr/>
 
