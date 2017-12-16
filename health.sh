@@ -338,16 +338,16 @@ do
 
           if [ -n "$KB" ];then
             SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'KB')
-            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$MB" ];then
             SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'MB')
-            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$GB" ];then
             SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'GB')
-            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024*1024*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000*1000*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$TB" ];then
             SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'TB')
-            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024*1024*1024*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000*1000*1000*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$B" ];then
             SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'B')
           else
@@ -377,16 +377,16 @@ do
 
           if [ -n "$KB" ];then
             SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'KB' )
-            SHARE_USED=$(echo "$SHARE_USED"*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_USED=$(echo "$SHARE_USED"*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$MB" ];then
             SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'MB' )
-            SHARE_USED=$(echo "$SHARE_USED"*1024*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_USED=$(echo "$SHARE_USED"*1000*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$GB" ];then
             SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'GB' )
-            SHARE_USED=$(echo "$SHARE_USED"*1024*1024*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_USED=$(echo "$SHARE_USED"*1000*1000*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$TB" ];then
             SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'TB' )
-            SHARE_USED=$(echo "$SHARE_USED"*1024*1024*1024*1024 | bc | awk -F '.' '{print $1}')
+            SHARE_USED=$(echo "$SHARE_USED"*1000*1000*1000*1000 | bc | awk -F '.' '{print $1}')
           elif [ -n "$B" ];then
             SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'B')
           else
