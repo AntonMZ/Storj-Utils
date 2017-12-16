@@ -10,7 +10,7 @@ There is a list of components required for the script maintaining:
 
 <hr/>
 
-#####Script setup
+### Script setup
 
 1.	Make a script’s home directory then run utility from this folder, for instance:
 
@@ -72,7 +72,7 @@ Please note you should change this path every time after the **node** updates, b
 
 <hr/>
 
-#####Script update
+### Script update
 
 To update the script, you should move to the script’s home folder and run command:
 
@@ -84,7 +84,7 @@ The utility **git** downloads the latest version of the **health** script. All c
 
 <hr/>
 
-#####How to run the script manually
+### How to run the script manually
 
 The **health** script runs in two different modes:
 The first mode is showing statistics without data sending to the statistic server:
@@ -105,7 +105,7 @@ bash health.sh –api
 
 <hr/>
 
-#####Script diagnostic
+### Script diagnostic
 In case the script does not send date to the statistic server, you should change an old string in the **crontab** file:
 
 ```bash
@@ -124,7 +124,7 @@ An actual statistic you can check at <a href="http://stat.storj.maxrival.com" ta
 
 <hr/>
 
-#####How to switch to the automatic update
+### How to switch to the automatic update
 
 First version of the **health** script were set up with **wget** command and changing an old script’s version with a new one. All of variables were inside the script and needed to be changed manually every update procedure. Nowadays these obstacles are successfully overcome.
 
