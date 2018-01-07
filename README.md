@@ -19,13 +19,14 @@ Current Version 1.0.5
 Для установки пакета:
 
 ```
-yum install net-tools.x86_64 -y
+yum install net-tools git -y
 ```
 
 Установка
 
 ```
 git clone https://github.com/AntonMZ/Storj-Utils.git
+chmod +x Storj-Utils/health.sh
 ```
 <hr>
 
