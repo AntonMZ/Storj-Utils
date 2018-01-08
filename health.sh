@@ -49,6 +49,11 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
   fi
 fi
 
+# make .env if it's doesn't exists
+if [ "$1" != "--api" ] && ! [[ -s ~/.env ]]; then
+  env > ~/.env
+fi
+
 #if [ "$1" != "--cli" ] || [ "$1" != "--api" ]; then
 #  help
 #  exit 0
@@ -56,6 +61,7 @@ fi
 
 # Variables
 #------------------------------------------------------------------------------
+. ~/.env
 CURRENT_FOLDER=$(dirname "$0")
 LOGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^LOGS_FOLDER= | sed 's/^LOGS_FOLDER=//')
 CONFIGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^CONFIGS_FOLDER= | sed 's/^CONFIGS_FOLDER=//')
