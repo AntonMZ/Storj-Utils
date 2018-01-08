@@ -10,6 +10,10 @@
 #
 # Prechecks
 #------------------------------------------------------------------------------
+#
+# Import Node & Storjshare PATH
+source ~/.bash_profile
+
 #SHELL=$(echo $SHELL | grep bash)
 #if [ -z $SHELL ];
 #then
