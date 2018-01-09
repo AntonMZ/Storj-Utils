@@ -11,8 +11,10 @@
 # Prechecks
 #------------------------------------------------------------------------------
 #
-# Import Node & Storjshare PATH
-source ~/.bash_profile
+# Import Node & Storjshare PATH (import from default nvm env)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
 
 #SHELL=$(echo $SHELL | grep bash)
 #if [ -z $SHELL ];
