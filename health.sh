@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 #
 # Script By Anton Zheltyshev
@@ -10,6 +10,12 @@
 #
 # Prechecks
 #------------------------------------------------------------------------------
+#
+# Import Node & Storjshare PATH (import from default nvm env)
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+[ -s "$NVM_DIR/bash_completion" ] && . "$NVM_DIR/bash_completion"
+
 #SHELL=$(echo $SHELL | grep bash)
 #if [ -z $SHELL ];
 #then
@@ -57,11 +63,11 @@ fi
 # Variables
 #------------------------------------------------------------------------------
 CURRENT_FOLDER=$(dirname "$0")
-LOGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep LOGS_FOLDER | tr -d 'LOGS_FOLDER=')
-CONFIGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep CONFIGS_FOLDER | tr -d 'CONFIGS_FOLDER=')
-WATCHDOG_LOG=$(cat "$CURRENT_FOLDER"/config.cfg | grep WATCHDOG_LOG | tr -d 'WATCHDOG_LOG=')
-EMAIL=$(cat "$CURRENT_FOLDER"/config.cfg | grep EMAIL | tr -d 'EMAIL=')
-VER='b1.1.0'
+LOGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^LOGS_FOLDER= | sed 's/^LOGS_FOLDER=//')
+CONFIGS_FOLDER=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^CONFIGS_FOLDER= | sed 's/^CONFIGS_FOLDER=//')
+WATCHDOG_LOG=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^WATCHDOG_LOG= | sed 's/^WATCHDOG_LOG=//')
+EMAIL=$(cat "$CURRENT_FOLDER"/config.cfg | grep ^EMAIL= | sed 's/^EMAIL=//')
+VER='b1.1.1'
 HOSTNAME=$(hostname)
 YEAR=$(date +%Y)
 MONTH=$(date +%-m)
@@ -327,30 +333,35 @@ do
           SHARE_ALLOCATED=$(echo 'no data')
         fi
       else
-        B=$(echo "$SHARE_ALLOCATED_TMP" | grep B)
-        KB=$(echo "$SHARE_ALLOCATED_TMP" | grep KB)
-        MB=$(echo "$SHARE_ALLOCATED_TMP" | grep MB)
-        GB=$(echo "$SHARE_ALLOCATED_TMP" | grep GB)
-        TB=$(echo "$SHARE_ALLOCATED_TMP" | grep TB)
-
-        if [ -n "$KB" ];then
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'KB')
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$MB" ];then
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'MB')
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$GB" ];then
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'GB')
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024*1024*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$TB" ];then
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'TB')
-          SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1024*1024*1024*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$B" ];then
-            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'B')
+        if [ "$1" == --cli ]; then
+          SHARE_ALLOCATED=$SHARE_ALLOCATED_TMP
         else
-          SHARE_USED=$(echo '-')
+          B=$(echo "$SHARE_ALLOCATED_TMP" | grep B)
+          KB=$(echo "$SHARE_ALLOCATED_TMP" | grep KB)
+          MB=$(echo "$SHARE_ALLOCATED_TMP" | grep MB)
+          GB=$(echo "$SHARE_ALLOCATED_TMP" | grep GB)
+          TB=$(echo "$SHARE_ALLOCATED_TMP" | grep TB)
+
+          if [ -n "$KB" ];then
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'KB')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$MB" ];then
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'MB')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$GB" ];then
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'GB')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000*1000*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$TB" ];then
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'TB')
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED"*1000*1000*1000*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$B" ];then
+            SHARE_ALLOCATED=$(echo "$SHARE_ALLOCATED_TMP" | tr -d 'B')
+          else
+            SHARE_USED=$(echo '-')
+          fi
         fi
       fi
+
       #
       #--------------------------------------------------------------------------------------------
       # Share_used &  Find KB,MB,GB
@@ -361,31 +372,34 @@ do
           SHARE_USED=$(echo 'no data')
         fi
       else
-        B=$(echo "$SHARE_USED_TMP" | grep B)
-        KB=$(echo "$SHARE_USED_TMP" | grep KB)
-        MB=$(echo "$SHARE_USED_TMP" | grep MB)
-        GB=$(echo "$SHARE_USED_TMP" | grep GB)
-        TB=$(echo "$SHARE_USED_TMP" | grep TB)
-
-        if [ -n "$KB" ];then
-          SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'KB' )
-          SHARE_USED=$(echo "$SHARE_USED"*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$MB" ];then
-          SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'MB' )
-          SHARE_USED=$(echo "$SHARE_USED"*1024*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$GB" ];then
-          SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'GB' )
-          SHARE_USED=$(echo "$SHARE_USED"*1024*1024*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$TB" ];then
-          SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'TB' )
-          SHARE_USED=$(echo "$SHARE_USED"*1024*1024*1024*1024 | bc | awk -F '.' '{print $1}')
-        elif [ -n "$B" ];then
-            SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'B')
+        if [ "$1" == --cli ]; then
+          SHARE_USED=$SHARE_USED_TMP
         else
-          SHARE_USED=$(echo '0')
+          B=$(echo "$SHARE_USED_TMP" | grep B)
+          KB=$(echo "$SHARE_USED_TMP" | grep KB)
+          MB=$(echo "$SHARE_USED_TMP" | grep MB)
+          GB=$(echo "$SHARE_USED_TMP" | grep GB)
+          TB=$(echo "$SHARE_USED_TMP" | grep TB)
+
+          if [ -n "$KB" ];then
+            SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'KB' )
+            SHARE_USED=$(echo "$SHARE_USED"*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$MB" ];then
+            SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'MB' )
+            SHARE_USED=$(echo "$SHARE_USED"*1000*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$GB" ];then
+            SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'GB' )
+            SHARE_USED=$(echo "$SHARE_USED"*1000*1000*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$TB" ];then
+            SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'TB' )
+            SHARE_USED=$(echo "$SHARE_USED"*1000*1000*1000*1000 | bc | awk -F '.' '{print $1}')
+          elif [ -n "$B" ];then
+            SHARE_USED=$(echo "$SHARE_USED_TMP" | tr -d 'B')
+          else
+            SHARE_USED=$(echo '0')
+          fi
         fi
       fi
-
       #--------------------------------------------------------------------------------------------
       # Last publish
       LAST_PUBLISH=$(grep -R 'PUBLISH' "$LOG_FILE" | tail -1 | awk -F ',' '{print $NF}' | cut -b 14-37)
@@ -506,8 +520,8 @@ do
         "Last Timeout:^ $LT \n" \
       	"Timeout Rate:^ $TR / $TR_STATUS \n" \
       	"DeltaTime:^ $DELTA $DELTASTATUS \n" \
-      	"Share_allocated:^ $SHARE_ALLOCATED GB\n" \
-      	"Share_Used:^ $SHARE_USED GB\n" \
+      	"Share_allocated:^ $SHARE_ALLOCATED \n" \
+      	"Share_Used:^ $SHARE_USED \n" \
         "Share_Percent:^ $SHARED_PERCENT \n" \
       	"Last publish:^ $LAST_PUBLISH \n" \
       	"Last offer:^ $LAST_OFFER \n" \
