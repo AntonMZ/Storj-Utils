@@ -55,11 +55,6 @@ if [ "$OSTYPE" == "linux-gnu" ]; then
   fi
 fi
 
-#if [ "$1" != "--cli" ] || [ "$1" != "--api" ]; then
-#  help
-#  exit 0
-#fi
-
 # Variables
 #------------------------------------------------------------------------------
 CURRENT_FOLDER=$(dirname "$0")
@@ -79,7 +74,15 @@ STORJ=$(storjshare -V)
 RTMAX='1000'
 DATA_TMP=$(storjshare status --json)
 lenght=$(echo "$DATA_TMP" | jq '.|length')
+MODE=$1
 #------------------------------------------------------------------------------
+
+if [ "$MODE" != "--cli" ] || [ "$MODE" != "--api" ]; then
+  MODE="--cli"
+#  help
+#  exit 0
+fi
+
 function help()
 {
     echo -e " \n" \
@@ -108,13 +111,13 @@ else
 	SESSIONS="n/a for $OSTYPE"
 fi
 
-if [ "$1" == --cli ];then
+if [ "$MODE" == --cli ];then
 {
 printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
 }
 fi
 
-if [ "$1" == --cli ];then
+if [ "$MODE" == --cli ];then
 {
   echo -e "   _____  _                _    _____       _  _           "
   echo -e "  |   __|| |_  ___  ___   |_|  |     | ___ | ||_| ___  ___ "
@@ -133,7 +136,7 @@ if [ "$1" == --cli ];then
 fi
 
 if [ -n "$DATA_TMP" ]; then
-  if [ "$1" == --cli ];then
+  if [ "$MODE" == --cli ];then
     {
       printf '%*s\n' "${COLUMNS:-$(tput cols)}" '' | tr ' ' -
     }
@@ -159,7 +162,7 @@ do
     	CURL=$(curl -s https://api.storj.io/contacts/"$line")
     	ADDRESS=$(echo "$CURL" | jq -r '.address')
       if [ "$ADDRESS" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           ADDRESS="no data"
         else
           ADDRESS=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -167,13 +170,13 @@ do
       fi
 
       if [ "$STATUS" == running ]; then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           STATUS=1
         else
           STATUS=$(echo -e "\e[0;32mNode running\e[0m")
         fi
         else
-          if [ "$1" == --api ]; then
+          if [ "$MODE" == --api ]; then
             STATUS=0
           else
             STATUS=$(echo -e "\e[0;31mNode stopped\e[0m")
@@ -181,25 +184,25 @@ do
       fi
 
       if [ "$BRIDGE_STATUS" == connected ]; then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           BRIDGE_STATUS=3
         else
           BRIDGE_STATUS=$(echo -e "\e[0;32mBridge connected\e[0m")
         fi
       elif [ "$BRIDGE_STATUS" == confirming ]; then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           BRIDGE_STATUS=2
         else
           BRIDGE_STATUS=$(echo -e "\e[0;33mBridge confirming\e[0m")
         fi
       elif [ "$BRIDGE_STATUS" == connecting ]; then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           BRIDGE_STATUS=1
         else
           BRIDGE_STATUS=$(echo -e "\e[0;33mBridge connecting\e[0m")
         fi
       else [ "$BRIDGE_STATUS" == disconnected ];
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           BRIDGE_STATUS=0
         else
           BRIDGE_STATUS=$(echo -e "\e[0;31mBridge disconnected\e[0m")
@@ -208,7 +211,7 @@ do
 
       LS=$(echo "$CURL" | jq -r '.lastSeen')
       if [ "$LS" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           LS="no data"
         else
           LS=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -217,7 +220,7 @@ do
 
       RT=$(echo "$CURL" | jq '.responseTime' | awk -F '.' '{print $1}')
       if [ "$RT" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           RT="0"
         else
           RT="err"
@@ -226,7 +229,7 @@ do
 
       reputation=$(echo "$CURL" | jq -r '.reputation')
       if [ "$reputation" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           reputation="0"
         else
           reputation=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -235,7 +238,7 @@ do
 
       AGENT=$(echo "$CURL" | jq -r '.userAgent')
       if [ "$AGENT" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           AGENT="no data"
         else
           AGENT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -244,7 +247,7 @@ do
 
       PORT=$(echo "$CURL" | jq -r '.port')
       if [ "$PORT" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           PORT="no data"
         else
           PORT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -253,7 +256,7 @@ do
 
       PROTOCOL=$(echo "$CURL" | jq -r '.protocol')
       if [ "$PROTOCOL" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           PROTOCOL="no data"
         else
           PROTOCOL=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -262,7 +265,7 @@ do
 
       LT=$(echo "$CURL" | jq -r '.lastTimeout')
       if [ "$LT" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           LT="no data"
         else
           LT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -271,7 +274,7 @@ do
 
       LASTCONTRACTSENT=$(echo "$CURL" | jq -r '.lastContractSent')
       if [ "$LASTCONTRACTSENT" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           LASTCONTRACTSENT="no data"
         else
           LASTCONTRACTSENT=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -280,7 +283,7 @@ do
 
       SPACEAVAILABLE=$(echo "$CURL" | jq -r '.spaceAvailable')
       if [ "$SPACEAVAILABLE" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           SPACEAVAILABLE="no data"
         else
           SPACEAVAILABLE=$(echo -e "\e[0;31mAPI Server does not contain a parameter\e[0m")
@@ -289,7 +292,7 @@ do
 
       TR=$(echo "$CURL" | jq -r '.timeoutRate')
       if [ "$TR" == null ];then
-        if [ "$1" == --api ]; then
+        if [ "$MODE" == --api ]; then
           TR="-"
           TR_STATUS="no data"
         else
@@ -309,7 +312,7 @@ do
 
       # Watchdog restart couns
       if [ ! -f $WATCHDOG_LOG ]; then
-        if [ "$1" == --cli ]; then
+        if [ "$MODE" == --cli ]; then
       	  RESTART_NODE_COUNT=$(echo -e "\e[0;32mNo log file\e[0m")
         else
           RESTART_NODE_COUNT="no file"
@@ -327,13 +330,13 @@ do
       # Share allocated
       SHARE_ALLOCATED_TMP=$(cat < "$CONFIGS_FOLDER"/"$line".json | grep storageAllocation | tr -d ' storageAllocation":,')
       if [ -z "$SHARE_ALLOCATED_TMP" ]; then
-        if [ "$1" == --cli ]; then
+        if [ "$MODE" == --cli ]; then
           SHARE_ALLOCATED=$(echo '0')
         else
           SHARE_ALLOCATED=$(echo 'no data')
         fi
       else
-        if [ "$1" == --cli ]; then
+        if [ "$MODE" == --cli ]; then
           SHARE_ALLOCATED=$SHARE_ALLOCATED_TMP
         else
           B=$(echo "$SHARE_ALLOCATED_TMP" | grep B)
@@ -366,13 +369,13 @@ do
       #--------------------------------------------------------------------------------------------
       # Share_used &  Find KB,MB,GB
       if [ -z "$SHARE_USED_TMP" ]; then
-        if [ "$1" == --cli ]; then
+        if [ "$MODE" == --cli ]; then
           SHARE_USED=$(echo '0')
         else
           SHARE_USED=$(echo 'no data')
         fi
       else
-        if [ "$1" == --cli ]; then
+        if [ "$MODE" == --cli ]; then
           SHARE_USED=$SHARE_USED_TMP
         else
           B=$(echo "$SHARE_USED_TMP" | grep B)
@@ -490,7 +493,7 @@ do
         DELTASTATUS=$(echo -e "/ \e[0;32mGood - Your clock is synced with a time server \e[0m")
       fi
 
-      if [ "$1" == --cli ];then
+      if [ "$MODE" == --cli ];then
         if [ "$RT" != err ];then
           if [ "$RT" -ge "$RTMAX" ]; then
             RT=$(echo -e "$RT / \e[0;31mBad\e[0m")
@@ -502,7 +505,7 @@ do
         fi
       fi
 
-      if [ "$1" == --cli ];then
+      if [ "$MODE" == --cli ];then
       {
       echo -e " NodeID:^ $line \n" \
       	"Status:^ $STATUS \n" \
@@ -541,7 +544,7 @@ do
       }
       fi
 
-      if [ "$1" == --api ];then
+      if [ "$MODE" == --api ];then
         curl -s -k -X POST \
         -F "email=$EMAIL" \
         -F "node_id=$line" \
